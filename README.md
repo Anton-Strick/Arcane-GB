@@ -15,3 +15,15 @@ In case this is your first time using a Git like this, welcome! This may seem a 
 4. [Pushing](https://www.atlassian.com/git/tutorials/syncing/git-push)
     - How you upload all of your local commits to the cloud. This will push to the branch you've checked out only, but it can be rolled back using some advanced commands.
     - Don't panic if you accidentally upload to Master! History can be rewritten and redirected, just shoot me a text and I'll take care of it.
+
+## PlatformIO Libraries
+These libraries are required installations on everyone's platformIOs. I would like to mitigate the need for this later, as it should be possible to leverage the /lib folder, but for now follow the following instructions:
+- Navigate to PIO Home.
+- Select Libraries on the left.
+- Search the registry.
+- Select the proper library and click "Add to Project"
+- Double check platformio.ini that all libraries follow the format Author/Library @ ^vX.X.X
+
+### Library List
+1. TMCStepper
+2. ArduinoJSON
