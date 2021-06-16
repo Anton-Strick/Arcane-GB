@@ -21,6 +21,7 @@ class Move{
 }
 
 /**
+ * =========================== Formatting Guidelines ==========================
  * Factions
  * 
  * W - White
@@ -37,7 +38,7 @@ class Move{
  * ----------------------------------------------------------------------------
  * Numbers
  * 
- * 1-8 corresponds with A-B
+ * 1-8 corresponds with starting positions in columns A-B
  * EG: WR1 is the rook that begins on A1, BR2 is the rook that begins on H8
  * ----------------------------------------------------------------------------
  * Special

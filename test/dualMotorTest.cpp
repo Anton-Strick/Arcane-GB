@@ -18,7 +18,6 @@
 #define STEP1_PIN           2          // Step
 #define RXD0                1          // RX pin, can be any GPIO
 #define TXD0                3          // TX pin, can be any GPIO
-#define STEP1_BIT_POS       0          // Faster Reguster Access = Faster Step Speed
 HardwareSerial Serial0(1);             // Serial Port
 TMC2209Stepper driver0(&Serial0, R_SENSE, DRIVER_ADDRESS);
 
@@ -28,9 +27,10 @@ TMC2209Stepper driver0(&Serial0, R_SENSE, DRIVER_ADDRESS);
 #define STEP2_PIN           27         // Step
 #define RXD2                16         // RX pin, can be any GPIO
 #define TXD2                17         // TX pin, can be any GPIO
-#define STEP1_BIT_POS        0         // Faster Reguster Access = Faster Step Speed
 HardwareSerial Serial1(2);             // Serial port
 TMC2209Stepper driver1(&Serial1, R_SENSE, DRIVER_ADDRESS);
+
+#define STEP_BIT_POS        0         // Faster Register Access = Faster Step Speed
 
 uint32_t motorPosition[2];
 
@@ -109,7 +109,7 @@ void setup() {
 void loop() {
     static uint32_t lastTime = 0;
     uint32_t ms = millis();
-    if ((ms - lastTime) > 500) { // Print Reports every second
+    if ((ms - lastTime) > 500) { // Print Reports every 1/2 second
         lastTime = ms;
         Serial.printf("\nDriver 0 Report\n ===============");
         displayReport(driver0, 0);

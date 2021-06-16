@@ -5,12 +5,22 @@
 
 using namespace TMC2208_n;
 
-Motor::Motor(uint8_t mID, uint8_t s) : mcuSerial(HardwareSerial(s)),
-             driver(TMC2209Stepper(&mcuSerial, R_SENSE, DRIVER_ADDRESS)) {
-    motorID = mID;
-    mcuSerial = s;
+/**
+ * Creates a new motor with a unique id and serial connection
+ * @param mID  Unique ID of the created motor
+ * @param s    The HardwareSerial port ID to be used (1-2)
+ * @param pins Various pins required for operation
+*/
+Motor::Motor(uint8_t mID, uint8_t s, uint8_t diagP, uint8_t dirP, 
+              uint8_t sP, uint8_t rxP, uint8_t txP) : 
+                mcuSerial(HardwareSerial(s)),
+                driver(TMC2209Stepper(&mcuSerial, R_SENSE, DRIVER_ADDRESS)) {
+    this->setID(mID);
+    this->setSerial(s);
+    this->setPins(diagP, dirP, sP, rxP, txP);
     this->setPosition();
 }
+
 
 /**
  * Initializes required parameters for TMC2209 use. Parameters can be found in 
@@ -28,4 +38,5 @@ boolean Motor::init() {
     this->driver.shaft(false);
     this->driver.sedn(0xb01);
     this->driver.SGTHRS(STALL_VALUE);
+    return true;
 }
