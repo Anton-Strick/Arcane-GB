@@ -24,8 +24,8 @@ enum dir { Clockwise, AntiClockwise };
 #define DIAG_PIN1           25         // STALL readout
 #define DIR_PIN1            26         // Direction
 #define STEP_PIN1           27         // Step
-#define RXD2                16         // RX pin, can be any GPIO
-#define TXD2                17         // TX pin, can be any GPIO
+#define RXD1                16         // RX pin, can be any GPIO
+#define TXD1                17         // TX pin, can be any GPIO
 #define SERIAL_PORT1        2
 
 #endif
