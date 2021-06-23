@@ -12,6 +12,7 @@ class Move {
 
         Move();
         Move(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]);
+        void destroy();
 };
 
 class Queue {
