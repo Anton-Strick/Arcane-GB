@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
 #include <TMCStepper.h>
+#include "robotControl.hpp"
 
 #define RXD2 16
 #define TXD2 17
@@ -25,7 +26,7 @@ void IRAM_ATTR onTimer() {
 void activate_interrupt();
 
 void setup() {
-  Serial.begin(115200);         // Init serial port and set baudrate
+  Serial.begin(9600);         // Init serial port and set baudrate
   while(!Serial);               // Wait for serial port to connect
   Serial.println("\nStart...");
   SERIAL_PORT.begin(115200, SERIAL_8N1, RXD2, TXD2);
@@ -37,6 +38,8 @@ void setup() {
 
   digitalWrite(EN_PIN ,LOW);
   digitalWrite(DIR_PIN ,HIGH);
+
+
 
   driver.begin();
   driver.toff(4);

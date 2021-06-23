@@ -35,13 +35,16 @@ boolean Motor::init() {
     this->driver.shaft(false);
     this->driver.sedn(0xb01);
     this->driver.SGTHRS(STALL_VALUE);
+
+    this->setTarget(0);
     return true;
 }
 
 void Motor::step()  { 
     if (motorPosition != targetPosition) {
-        digitalWrite(stepPin, !digitalRead(stepPin));
-
+        digitalWrite(stepPin, !digitalRead(stepPin)); // High Edge
+        delay(1); // Minimum step interval = 100nSec
+        digitalWrite(stepPin, !digitalRead(stepPin)); // Low Edge
         switch (this->getDir()) {
             case Clockwise : 
                 motorPosition += 1;
@@ -51,8 +54,45 @@ void Motor::step()  {
                 break;
         }
     }
+}
 
-    
+uint32_t Motor::getStepsToGo() {
+    switch (this->getDir()) {
+        case Clockwise : 
+            return this->getTarget() - this->getPosition();
+
+        case AntiClockwise :
+            return this->getPosition() - this->getTarget();
+    }
+
+    return -1;
+}
+
+void Motor::setTarget(uint32_t t) {
+    switch(this->getDir()) {
+        case Clockwise :
+            targetPosition = motorPosition + t;
+            break;
+        
+        case AntiClockwise :
+            targetPosition = motorPosition - t;
+            break;
+    }
+}
+
+void Motor::displayReport() {
+    Serial.printf("\n----Motor %d Report----\n", this->getID());
+    Serial.printf("StallGuard Sensor:  ");
+    Serial.println(this->getSG(), DEC);
+    Serial.printf("CS Actual:          ");
+    Serial.println(this->getCS(), DEC);
+    Serial.printf("Current Position:   ");
+    Serial.println(this->getPosition());
+    Serial.printf("Target Position:    ");
+    Serial.println(this->getTarget(), DEC);
+    Serial.printf("Steps to Go:        ");
+    Serial.println(this->getStepsToGo(), DEC);
+
 }
 
 TMC2209Stepper createDriver(HardwareSerial serial, float RS, uint8_t addr) {

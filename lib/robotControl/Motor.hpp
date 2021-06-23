@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
 #include <TMCStepper.h>
-#include <AccelStepper.h>
 #include "config.hpp"
 
 #define DRIVER_ADDRESS     0b00        // TMC2209 Driver address
@@ -35,10 +34,13 @@ class Motor {
         //-------------------------- Get Functions --------------------------//
         uint32_t getPosition() { return motorPosition; }
         uint8_t getDir() { return digitalRead(dirPin); }
-        uint32_t getStepsToGo() { return targetPosition - motorPosition; }
+        uint32_t getTarget() { return targetPosition; }
+        uint8_t getID() { return motorID; }
+        uint16_t getSG() { return driver.SG_RESULT(); }
+        uint16_t getCS() { return driver.cs2rms(driver.cs_actual()); }
         //-------------------------- Set Functions --------------------------//
         void setPosition() { motorPosition = 0; }
-        void setTarget(uint32_t t) { targetPosition = t; }
+        
         void setDir(uint8_t d) { digitalWrite(dirPin, d); }
         void setPins(uint8_t diagP, uint8_t dirP, uint8_t sP) {
                          diagPin = diagP;
@@ -57,9 +59,13 @@ class Motor {
         */
         boolean init();
 
+        uint32_t getStepsToGo();
+
         void step();
 
         void displayReport();
+
+        void setTarget(uint32_t t);
 };
 
 TMC2209Stepper createDriver(HardwareSerial serial, float RS, uint8_t addr);
