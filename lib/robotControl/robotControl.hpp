@@ -18,6 +18,7 @@ class robotControl {
 
         //------------------- Defined in robotControl.cpp -------------------//
         void queueMove(Move m);
+        Move xyToMotors(int16_t dx, int16_t dy);
 };
 
 #endif
