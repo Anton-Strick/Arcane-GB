@@ -1,11 +1,11 @@
+#pragma once
+
 #ifndef CONGIG_HPP
 #define CONFIG_HPP
 
 #define NUM_MOTORS 2
 #define XSTEP_PMM  80
 #define YSTEP_PMM  80
-
-enum dir { Clockwise, AntiClockwise };
 
 #define DRIVER_ADDRESS     0b00        // TMC2209 Driver address
 #define R_SENSE            0.11f       // E_SENSE for current calc.  
@@ -16,9 +16,9 @@ enum dir { Clockwise, AntiClockwise };
 #define DIAG_PIN0          15          // STALL readout
 #define DIR_PIN0            4          // Direction
 #define STEP_PIN0           2          // Step
-#define RXD0                1          // RX pin, can be any GPIO
-#define TXD0                3          // TX pin, can be any GPIO
-#define SERIAL_PORT0        0
+#define RXD0                16          // RX pin, can be any GPIO
+#define TXD0                17          // TX pin, can be any GPIO
+#define SERIAL_PORT0        Serial2
 
 // --------------------------------- Motor 2 Definition ---------------------------------
 #define DIAG_PIN1           25         // STALL readout
@@ -26,6 +26,8 @@ enum dir { Clockwise, AntiClockwise };
 #define STEP_PIN1           27         // Step
 #define RXD1                16         // RX pin, can be any GPIO
 #define TXD1                17         // TX pin, can be any GPIO
-#define SERIAL_PORT1        2
+#define SERIAL_PORT1        Serial1
+
+enum dir { AntiClockwise, Clockwise };
 
 #endif

@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <Motor.hpp>
 #include <Queue.hpp>
-#include <config.hpp>
 
 class robotControl {
     private:

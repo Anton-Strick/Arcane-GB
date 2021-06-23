@@ -11,13 +11,10 @@ using namespace TMC2208_n;
  * @param s    The HardwareSerial port ID to be used (1-2)
  * @param pins Various pins required for operation
 */
-Motor::Motor(uint8_t mID, uint8_t s, uint8_t diagP, uint8_t dirP, 
-              uint8_t sP, uint8_t rxP, uint8_t txP) : 
-                mcuSerial(HardwareSerial(s)),
-                driver(TMC2209Stepper(&mcuSerial, R_SENSE, DRIVER_ADDRESS)) {
-    this->setID(mID);
-    this->setSerial(s);
-    this->setPins(diagP, dirP, sP, rxP, txP);
+Motor::Motor(uint8_t mid, TMC2209Stepper d, uint8_t diagP, uint8_t dirP, 
+              uint8_t stepP) :
+              driver(d) {
+    this->setPins(diagP, dirP, stepP);
     this->setPosition();
 }
 
@@ -39,4 +36,39 @@ boolean Motor::init() {
     this->driver.sedn(0xb01);
     this->driver.SGTHRS(STALL_VALUE);
     return true;
+}
+
+void Motor::step()  { 
+    if (motorPosition != targetPosition) {
+        digitalWrite(stepPin, !digitalRead(stepPin));
+
+        switch (this->getDir()) {
+            case Clockwise : 
+                motorPosition += 1;
+                break;
+            case AntiClockwise :
+                motorPosition -= 1;
+                break;
+        }
+    }
+
+    
+}
+
+TMC2209Stepper createDriver(HardwareSerial serial, float RS, uint8_t addr) {
+    TMC2209Stepper tmp(&serial, RS, addr);
+    return tmp;
+}
+
+HardwareSerial getSerial(uint8_t s) {
+    switch(s) {
+        case 0 :
+            return Serial2;
+
+        case 1 :
+            return Serial1;
+
+        default :
+            return Serial;
+    }
 }

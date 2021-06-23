@@ -2,7 +2,6 @@
 #define QUEUE_HPP
 
 #include <Arduino.h>
-#include "robotControl.hpp"
 #include "config.hpp"
 
 class Move {
