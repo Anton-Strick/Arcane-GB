@@ -21,3 +21,20 @@ Move robotControl::xyToMotors(int16_t dX, int16_t dY) {
     Move newMove(dirs, steps);
     return newMove;
 }
+
+void robotControl::initializeMotors() {
+    SERIAL_PORT0.begin(115200, SERIAL_8N1, RXD0, TXD0);
+    SERIAL_PORT1.begin(115200, SERIAL_8N1, RXD1, TXD1);
+
+    TMC2209Stepper driver0(&SERIAL_PORT0, R_SENSE, DRIVER_ADDRESS);
+    TMC2209Stepper driver1(&SERIAL_PORT0, R_SENSE, DRIVER_ADDRESS);
+    motors[0] = new Motor((uint8_t) 0, driver0, DIAG_PIN0, DIR_PIN0, STEP_PIN0);
+    motors[1] = new Motor((uint8_t) 1, driver1, DIAG_PIN1, DIR_PIN1, STEP_PIN1);
+
+    for (Motor* m : motors) {
+        m->init();
+    }
+
+    configMotorPins(); // located in config
+
+}
