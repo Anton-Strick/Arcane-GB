@@ -1,32 +1,5 @@
 #include <Arduino.h>
-#include "queue.hpp"
-
-Move::Move() {
-    this->next = NULL;
-    for (int i = 0; i < NUM_MOTORS; i++) {
-        this->direction[i] = Clockwise;
-        this->numSteps[i] = -1;
-    }
-}
-
-/**
- * @param d The direction of each motor
- * @param s the number of steps to be executed by each motor
-*/
-Move::Move(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]) {
-    this->next = NULL;
-    for (int i = 0; i < NUM_MOTORS; i++) {
-        this->direction[i] = d[i];
-        this->numSteps[i] = s[i];
-    }
-}
-
-void Move::destroy() {
-    delete this->direction;
-    delete this->next;
-    delete this->numSteps;
-    delete this;    
-}
+#include "Queue.hpp"
 
 Queue::Queue() {
     this->hasMoves = false;

@@ -3,17 +3,7 @@
 
 #include <Arduino.h>
 #include "config.hpp"
-
-class Move {
-    public:
-        Move* next;
-        uint8_t direction[NUM_MOTORS];
-        uint32_t numSteps[NUM_MOTORS];
-
-        Move();
-        Move(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]);
-        void destroy();
-};
+#include "Move.hpp"
 
 class Queue {
     private:
