@@ -16,26 +16,26 @@
  */
 class RobotControl {
     private:
-        Queue q;
+        Queue queue;
         Motor* motors[NUM_MOTORS];
     public:
         RobotControl(); // Default Constructor
-        //-------------------------- Get Functions --------------------------//
+        //--------------------------- Get Methods ---------------------------//
 
 
-        //-------------------------- Set Functions --------------------------//
+        //--------------------------- Set Methods ---------------------------//
         
 
-        //========================= Helper Functions ========================//
+        //========================== Helper Methods =========================//
         /**
          * Places a Move in the queue of the RobotController
          */
-        void queue(Move m) { q.enQ(m);}
+        void queue(Move m) { queue.enQueue(m);}
         /**
          * Dequeues the next move in the RobotController's queue
          * @return The Move just dequeued
          */
-        Move dequeue() { return q.deQ(); }
+        Move dequeue() { return queue.deQueue(); }
 
         //------------------- Defined in RobotControl.cpp -------------------//
         void disableMotors();
