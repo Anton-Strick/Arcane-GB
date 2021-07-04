@@ -30,12 +30,12 @@ class RobotControl {
         /**
          * Places a Move in the queue of the RobotController
          */
-        void queue(Move m) { queue.enQueue(m);}
+        void queueMove(Move* m) { this->queue.enQueue(m); }
         /**
          * Dequeues the next move in the RobotController's queue
          * @return The Move just dequeued
          */
-        Move dequeue() { return queue.deQueue(); }
+        Move dequeueMove() { return this->queue.deQueue(); }
 
         //------------------- Defined in RobotControl.cpp -------------------//
         void disableMotors();
