@@ -1,32 +1,5 @@
 #include <Arduino.h>
-#include "queue.hpp"
-
-Move::Move() {
-    this->next = NULL;
-    for (int i = 0; i < NUM_MOTORS; i++) {
-        this->direction[i] = Clockwise;
-        this->numSteps[i] = -1;
-    }
-}
-
-/**
- * @param d The direction of each motor
- * @param s the number of steps to be executed by each motor
-*/
-Move::Move(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]) {
-    this->next = NULL;
-    for (int i = 0; i < NUM_MOTORS; i++) {
-        this->direction[i] = d[i];
-        this->numSteps[i] = s[i];
-    }
-}
-
-void Move::destroy() {
-    delete this->direction;
-    delete this->next;
-    delete this->numSteps;
-    delete this;    
-}
+#include "Queue.hpp"
 
 Queue::Queue() {
     this->hasMoves = false;
@@ -34,41 +7,50 @@ Queue::Queue() {
     this->tail = this->head;
 }
 
-void Queue::enQ(Move m) {
-    this->tail->next = &m; // Inserts node at end of list
-    this->tail = this->tail->next; // Move becomes the tail
-    this->tail->next = this->head; // Tail loops to head
+/**
+ * Places a pre-existing move in the queue
+ * @param m {Move} a valid Move object. It's 'next' pointer will be lost
+ */
+void Queue::enQueue(Move* m) {
+    this->tail->setNext(m); // Inserts node at end of list
+    this->setTail(this->tail->getNext());  // Move becomes the tail
+    this->tail->setNext(this->head); // Preserve the loop
 
     if (!this->hasMoves)
         this->hasMoves = true;
+
+    this->setSize(this->getSize() + 1);
 }
 
-void Queue::enQ(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]) {
-    Move* newMove = new Move(d, s);
-    
-    this->tail->next = newMove; // Inserts node at end
-    this->tail = this->tail->next; // Tail is maintained
-    this->tail->next = head; // List loops
-
-    if (!this->hasMoves)
-        this->hasMoves = true; // Alert Moves are available
+/**
+ * Places a new move generated from the given parameters in the queue
+ * @param dirs {uint8_t[NUM_MOTORS]} Contains the direction flag of each motor 
+ *                                   contained at the corresponding index
+ * @param steps {uint32_t[NUM_MOTORS]} Contains the number of steps required 
+ *                                     from each motor, respectively.
+ */
+void Queue::enQueue(uint8_t dirs[NUM_MOTORS], uint32_t steps[NUM_MOTORS]) {
+    Move* newMove = new Move(dirs, steps);
+    this->enQueue(newMove);
 }
 
-Move Queue::deQ() {
+Move Queue::deQueue() {
     if (this->tail == this->head) {
         this->hasMoves = false;
         return *this->head; // Cannot deQ
     }
 
     else {
-        Move* tmp = this->head->next; // Isolate desired move
+        Move* tmp = this->head->getNext(); // Isolate desired move
 
         if (tmp == this->tail) { // On Empty
             this->tail = this->head;
-            this->tail->next = this->head;
+            this->tail->setNext(this->head);
             this->hasMoves = false;
         }
-        this->head->next = tmp->next; // Remove from queue
+        this->head->setNext(tmp->getNext()); // Remove from queue
+
+        this->setSize(this->getSize() - 1);
         return *tmp; // Return freshly de-queued move
     }
 }

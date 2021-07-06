@@ -4,20 +4,48 @@
 #include <Arduino.h>
 #include <Motor.hpp>
 #include <Queue.hpp>
+#include "config.hpp"
 
-class robotControl {
+
+/**
+ * Primary high-level control class for the H-Bot.
+ * @param q The current Queue of Moves planned by the 
+ *                      RobotController
+ * @param motors An array containing members of the Motor class used by the 
+ *               RobotController with parameters defined in config.hpp
+ */
+class RobotControl {
     private:
-        Queue q;
-        Motor motors[NUM_MOTORS];
+        Queue queue;
+        Motor* motors[NUM_MOTORS];
     public:
-        //-------------------------- Get Functions --------------------------//
+        RobotControl(); // Default Constructor
+        //--------------------------- Get Methods ---------------------------//
 
 
-        //-------------------------- Set Functions --------------------------//
+        //--------------------------- Set Methods ---------------------------//
+        
 
+        //========================== Helper Methods =========================//
+        /**
+         * Places a Move in the queue of the RobotController
+         */
+        void queueMove(Move* m) { this->queue.enQueue(m); }
+        /**
+         * Dequeues the next move in the RobotController's queue
+         * @return The Move just dequeued
+         */
+        Move dequeueMove() { return this->queue.deQueue(); }
 
-        //------------------- Defined in robotControl.cpp -------------------//
-        void queueMove(Move m);
+        //------------------- Defined in RobotControl.cpp -------------------//
+        void disableMotors();
+        void enableMotors();
+
+        void initializeMotors();
+        void initializeQueue();
+
+        void stepMotors();
+        
         Move xyToMotors(int16_t dx, int16_t dy);
 };
 

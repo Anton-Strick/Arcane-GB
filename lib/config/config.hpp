@@ -10,6 +10,7 @@
 #define R_SENSE            0.11f       // E_SENSE for current calc.  
 #define STALL_VALUE        2           // [0..255]
 
+#define STEP_BIT_POS        0          // Faster access to base position
 
 // --------------------------------- Motor 0 Definition ---------------------------------
 #define EN_PIN0             18         // Enable
@@ -30,5 +31,7 @@
 #define SERIAL_PORT1        Serial1
 
 enum dir { AntiClockwise, Clockwise };
+
+void configMotorPins();
 
 #endif

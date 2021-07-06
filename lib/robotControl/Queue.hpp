@@ -3,17 +3,7 @@
 
 #include <Arduino.h>
 #include "config.hpp"
-
-class Move {
-    public:
-        Move* next;
-        uint8_t direction[NUM_MOTORS];
-        uint32_t numSteps[NUM_MOTORS];
-
-        Move();
-        Move(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]);
-        void destroy();
-};
+#include "Move.hpp"
 
 class Queue {
     private:
@@ -23,11 +13,25 @@ class Queue {
 
     public:
         boolean hasMoves;
-        
+
         Queue();
-        void enQ(Move m);
-        void enQ(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]);
-        Move deQ();
+        
+        //--------------------------- Get Methods ---------------------------//
+
+        Move* getHead() { return this->head; }
+        Move* getTail() { return this->tail; }
+        uint8_t getSize() { return this->queueSize; }
+
+        //--------------------------- Set Methods ---------------------------//
+
+        void setHead(Move* m) { this->head = m; }
+        void setSize(uint8_t i) { this->queueSize = i; }
+        void setTail(Move* m) { this->tail = m; }
+
+        //========================== Helper Methods =========================//
+        void enQueue(Move* m);
+        void enQueue(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]);
+        Move deQueue();
 };
 
 #endif

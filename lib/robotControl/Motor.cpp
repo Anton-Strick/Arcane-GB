@@ -29,11 +29,11 @@ boolean Motor::init() {
     this->driver.blank_time(24);
     this->driver.rms_current(500); // mA
     this->driver.microsteps(8);
-    this->driver.TCOOLTHRS(0xFFFFF);
+    this->driver.TCOOLTHRS((uint32_t) 0xFFFFF);
     this->driver.semin(0);
     this->driver.semax(2);
     this->driver.shaft(false);
-    this->driver.sedn(0xb01);
+    this->driver.sedn((uint8_t) 0xb01);
     this->driver.SGTHRS(STALL_VALUE);
 
     this->setTarget(0);

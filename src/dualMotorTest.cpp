@@ -1,11 +1,10 @@
 /** Notes for Testing
  *  - Our motors use 200 steps per revolution
- *  - Converting Motors to classes would help a bit
  */
 
 #include <Arduino.h>
 #include "robotControl.hpp"
-#include <config.h>
+#include "config.hpp"
 
 #define STEP_BIT_POS        0         // Faster Register Access = Faster Step Speed
 
@@ -36,7 +35,7 @@ void configMotorPins() {
 
 void setup() {
     //------------------------------ Connect to Computer ------------------------------//
-    Serial.begin(9600);
+    Serial.begin(9600); // Make sure your system is communicating at this Baud
     while (!Serial);
     //----------------------------- Connect to Motors 1+2 -----------------------------//
     SERIAL_PORT0.begin(115200, SERIAL_8N1, RXD0, TXD0);
