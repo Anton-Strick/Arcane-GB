@@ -58,9 +58,9 @@ void setup() {
     digitalWrite(EN_PIN1, LOW);
 
     digitalWrite(DIR_PIN0, Clockwise);
-    motors[0]->setTarget(1600);
+    motors[0]->setTarget(50 * STEPS_PER_MM);
     digitalWrite(DIR_PIN1, AntiClockwise);
-    motors[1]->setTarget(800);
+    motors[1]->setTarget(50 * STEPS_PER_MM);
 
     Serial.println("======== Begin Dual Motor Test ========");
     Serial.println("| Clear:  motors spin in opposing     |");
@@ -88,12 +88,12 @@ void loop() {
             switch (m->getDir()) {
                 case Clockwise :
                     m->setDir(AntiClockwise);
-                    m->setTarget(800); // 180 degrees
+                    m->setTarget(50 * STEPS_PER_MM); // 180 degrees
                     break;
                 
                 case AntiClockwise : 
                     m->setDir(Clockwise);
-                    m->setTarget(1600); // 360 degrees
+                    m->setTarget(50 * STEPS_PER_MM); // 360 degrees
                     break;
             }
         }
@@ -103,7 +103,7 @@ void loop() {
 void timerInit() {
     cli(); // Stops Interrupts
     //----------------------- Configure Motor 0 Timer -----------------------//
-    timer0 = timerBegin(3, 16, true);
+    timer0 = timerBegin(3, 8, true);
     timerAttachInterrupt(timer0, &motorISR, true);
     timerAlarmWrite(timer0, 10000, true);
     timerAlarmEnable(timer0);

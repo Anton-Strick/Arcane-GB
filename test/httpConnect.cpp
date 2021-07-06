@@ -16,8 +16,6 @@ String move; // Contains last move from server
 unsigned long lastTime = 0;      // TODO: Replace with ISR
 unsigned long timerDelay = 5000; // ^^^^^^^^^^^^^^^^^^^^^^
 
-unsigned int count = 0; // 
-
 /*
  * Initializes a serial connection (Baud = 115200), a WiFi Connection
  * with the network denoted by ssid. Serial connection is used to
@@ -41,7 +39,11 @@ void setup() {
  * the server                                                        
  */
 void loop() {
-  if ((millis() - lastTime) > timerDelay) {
+  static uint32_t lastTime = 0;
+  static uint16_t count = 0;
+  uint32_t ms = millis();
+  if ((ms - lastTime) > timerDelay) {
+    lastTime = ms;
     // Check WiFi status, cannot transmit if unconnected
     if (WiFi.status() == WL_CONNECTED) {
       count += 5;

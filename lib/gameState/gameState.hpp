@@ -5,7 +5,7 @@
 
 class Piece {
     private:
-        int position[2] = {0, 0};
+        uint8_t position[2] = {0, 0};
         String name;
 
     public:
@@ -21,8 +21,7 @@ class Piece {
 
         //------------------- Defined in gameState.cpp ----------------------//
         Piece(int* p, String n);
-        boolean isValidMove(int* end);
-        boolean movePiece(int* end);
+        void movePiece(int* end);
 };
 
 #endif
