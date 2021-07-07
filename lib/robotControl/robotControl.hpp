@@ -16,9 +16,10 @@
  */
 class RobotControl {
     private:
-        Queue queue;
+        Queue* queue;
         Motor* motors[NUM_MOTORS];
     public:
+        boolean moveComplete;
         RobotControl(); // Default Constructor
         //--------------------------- Get Methods ---------------------------//
 
@@ -30,13 +31,12 @@ class RobotControl {
         /**
          * Places a Move in the queue of the RobotController
          */
-        void queueMove(Move* m) { this->queue.enQueue(m); }
+        void queueMove(Move* m) { this->queue->enQueue(m); }
         /**
          * Dequeues the next move in the RobotController's queue
          * @return The Move just dequeued
          */
-        Move dequeueMove() { return this->queue.deQueue(); }
-
+        Move* dequeueMove(); 
         //------------------- Defined in RobotControl.cpp -------------------//
         void disableMotors();
         void enableMotors();
@@ -45,8 +45,11 @@ class RobotControl {
         void initializeQueue();
 
         void stepMotors();
+
+        void printReport();
         
-        Move xyToMotors(int16_t dx, int16_t dy);
+        Move* xyToMotors(int16_t dx, int16_t dy);
+        void loadMove(Move* m);
 };
 
 #endif

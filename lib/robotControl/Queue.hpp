@@ -31,7 +31,7 @@ class Queue {
         //========================== Helper Methods =========================//
         void enQueue(Move* m);
         void enQueue(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]);
-        Move deQueue();
+        Move* deQueue();
 };
 
 #endif

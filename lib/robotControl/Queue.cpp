@@ -34,10 +34,10 @@ void Queue::enQueue(uint8_t dirs[NUM_MOTORS], uint32_t steps[NUM_MOTORS]) {
     this->enQueue(newMove);
 }
 
-Move Queue::deQueue() {
+Move* Queue::deQueue() {
     if (this->tail == this->head) {
         this->hasMoves = false;
-        return *this->head; // Cannot deQ
+        return this->head; // Cannot deQ
     }
 
     else {
@@ -51,6 +51,6 @@ Move Queue::deQueue() {
         this->head->setNext(tmp->getNext()); // Remove from queue
 
         this->setSize(this->getSize() - 1);
-        return *tmp; // Return freshly de-queued move
+        return tmp; // Return freshly de-queued move
     }
 }

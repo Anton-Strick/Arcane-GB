@@ -31,6 +31,8 @@ class Move {
         //========================== Helper Methods =========================//
         
         void destroy();
+
+        void printMove();
 };
 
 #endif

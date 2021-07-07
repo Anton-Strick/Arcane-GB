@@ -9,7 +9,7 @@ Move::Move() {
     this->next = this;
     for (int i = 0; i < NUM_MOTORS; i++) {
         this->direction[i] = Clockwise;
-        this->numSteps[i] = -1;
+        this->numSteps[i] = -1; //4294967295
     }
 }
 
@@ -37,4 +37,14 @@ void Move::destroy() {
     delete this->next;
     delete this->numSteps;
     delete this;
+}
+
+/**
+ * Prints out the direction and steps to be taken in a particular move.
+ * (Includes a newline character)
+ */
+void Move::printMove() {
+    Serial.printf("M0 - %d, %d steps | M1 - %d, %d steps\n", 
+                   this->direction[0], this->numSteps[0],
+                   direction[1], numSteps[1]);
 }

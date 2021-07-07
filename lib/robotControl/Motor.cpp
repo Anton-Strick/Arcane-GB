@@ -53,7 +53,9 @@ void Motor::step()  {
                 motorPosition -= 1;
                 break;
         }
-    }
+    } // End motor reached target
+    else
+        this->isComplete = true;
 }
 
 uint32_t Motor::getStepsToGo() {
@@ -69,6 +71,7 @@ uint32_t Motor::getStepsToGo() {
 }
 
 void Motor::setTarget(uint32_t t) {
+    this->isComplete = false;
     switch(this->getDir()) {
         case Clockwise :
             targetPosition = motorPosition + t;
