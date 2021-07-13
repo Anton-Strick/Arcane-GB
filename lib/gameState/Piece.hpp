@@ -1,5 +1,5 @@
-#ifndef GAMESTATE_HPP
-#define GAMESTATE_HPP
+#ifndef Piece_HPP
+#define Piece_HPP
 
 #include<Arduino.h>
 
@@ -21,7 +21,7 @@ class Piece {
 
         //------------------- Defined in gameState.cpp ----------------------//
         Piece(int* p, String n);
-        void movePiece(int* end);
+        boolean movePiece(int* end);
 };
 
 #endif

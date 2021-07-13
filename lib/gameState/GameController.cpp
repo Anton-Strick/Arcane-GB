@@ -1,20 +1,5 @@
 #include <Arduino.h>
-#include "gameState.hpp"
-
-/**
- * Returns whether a piece can reach the specified position in 1 move
- * @param end an int array of size 2 containing the end position [x,y]
-*/
-Piece::Piece(int* p, String n) {
-    setPosition(p);
-    setName(n);
-}
-
-boolean Piece::movePiece(int* end) {
-    setPosition(end);
-    return true;
-}
-
+#include"GameController.hpp"
 /**
  * Returns an integer (0-4) to indicate which direcection a piece should
  * transpose to in order to avoid knocking into other pieces.
@@ -25,7 +10,7 @@ boolean Piece::movePiece(int* end) {
  * @param position An int array of size 2 which contains the starting
  *                 position of a piece. [x,y]
  */
-uint8_t getTransposition(int* position) {
+uint8_t GameController::getTransposition(uint8_t* position) {
     uint8_t indicator;
     
     if (position[0] >= 4)
@@ -40,6 +25,5 @@ uint8_t getTransposition(int* position) {
         indicator = indicator | 0xb00;  // Transpose Up
 
     return indicator;
-
 }
 
