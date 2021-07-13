@@ -9,6 +9,7 @@ enum mode { Bluetooth, WiFi };
 
 #define JSON_SIZE 200
 
+using namespace std;
 class WirelessController {
     private : 
         String password;
@@ -32,10 +33,16 @@ class WirelessController {
         //========================== Helper Methods =========================//
 
         //---------------- Defined in WirelessController.cpp ----------------//
-        String getMove();
+        JsonMove getMove();
         void setMode(uint8_t mode);
         array<String, 2> getCredentials();
         boolean sendReport();
+};
+
+struct JsonMove {
+    uint8_t turn, pieceID, specialFlag;
+    array<uint8_t, 2> startPos;
+    array<uint8_t, 2> endPos;
 };
 
 #endif
