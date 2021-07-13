@@ -85,10 +85,10 @@ Move* RobotControl::xyToMotors(int16_t dX, int16_t dY) {
 
 void RobotControl::printReport() {
     Serial.println("========== R-Control Report ===========");
-    Serial.printf("Number of Moves in Queue:  %d\n", this->queue->getSize());
+    Serial.printf("Number of Moves in Queue:  %d", this->queue->getSize());
     motors[0]->displayReport();
     motors[1]->displayReport();
-    Serial.printf("Next Move:     ");
+    Serial.printf("\nNext Move:     ");
     this->queue->getTail()->printMove();
 }
 
