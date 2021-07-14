@@ -29,7 +29,7 @@ class GameController {
 
         //------------------ Defined in GameController.cpp ------------------//
         
-        uint8_t getTransposition(uint8_t* position);
+        uint8_t getTransposition(array<uint8_t, 2> position);
         array<uint8_t, 2> parseMove(String);
         boolean reportToServer(String message);
 };

@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <array>
 #include"GameController.hpp"
 /**
  * Returns an integer (0-4) to indicate which direcection a piece should
@@ -10,8 +11,8 @@
  * @param position An int array of size 2 which contains the starting
  *                 position of a piece. [x,y]
  */
-uint8_t GameController::getTransposition(uint8_t* position) {
-    uint8_t indicator;
+uint8_t GameController::getTransposition(std::array<uint8_t, 2> position) {
+    uint8_t indicator = 0;
     
     if (position[0] >= 4)
         indicator = indicator | 0xb01;  // Transpose Left

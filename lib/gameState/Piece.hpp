@@ -35,7 +35,7 @@ enum Piece_Type {
 
 class Piece {
     private:
-        std::array<uint8_t, 2> position = {0, 0};
+        std::array<uint8_t, 2> position = { { 0, 0 } };
         uint8_t pieceID;
 
     public:
@@ -51,7 +51,6 @@ class Piece {
 
         //------------------- Defined in gameState.cpp ----------------------//
         Piece(int* p, String n);
-        boolean movePiece(int* end);
 };
 
 #endif
