@@ -5,7 +5,7 @@
 #include <array>
 #include <ArduinoJson.h>
 
-enum mode { Bluetooth, WiFi };
+enum mode { Bluetooth, WIFI };
 
 #define JSON_SIZE 200
 
