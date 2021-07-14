@@ -1,0 +1,348 @@
+Start
+QUEUED:   M0 - 1, 2000 steps | M1 - 1, 2000 steps
+QUEUED:   M0 - 0, 4000 steps | M1 - 0, 4000 steps
+QUEUED:   M0 - 0, 4000 steps | M1 - 1, 4000 steps
+QUEUED:   M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  4
+
+----Motor 120 Report----
+StallGuard Sensor:  0
+CS Actual:          1767
+Current Position:   0
+Target Position:    0
+Steps to Go:        0
+
+----Motor 177 Report----
+StallGuard Sensor:  0
+CS Actual:          1767
+Current Position:   0
+Target Position:    0
+Steps to Go:        0
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+
+
+============== Loading Move... ==============
+
+
+========== R-Control Report ===========
+Number of Moves in Queue:  3
+
+----Motor 120 Report----
+StallGuard Sensor:  0
+CS Actual:          1767
+Current Position:   441
+Target Position:    2000
+Steps to Go:        1507
+
+----Motor 177 Report----
+StallGuard Sensor:  130
+CS Actual:          1767
+Current Position:   601
+Target Position:    2000
+Steps to Go:        1347
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  3
+
+----Motor 120 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   1442
+Target Position:    2000
+Steps to Go:        504
+
+----Motor 177 Report----
+StallGuard Sensor:  172
+CS Actual:          1767
+Current Position:   1602
+Target Position:    2000
+Steps to Go:        344
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  3
+
+----Motor 120 Report----
+StallGuard Sensor:  156
+CS Actual:          1767
+Current Position:   2000
+Target Position:    2000
+Steps to Go:        0
+
+----Motor 177 Report----
+StallGuard Sensor:  156
+CS Actual:          1767
+Current Position:   2000
+Target Position:    2000
+Steps to Go:        0
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+
+
+============== Loading Move... ==============
+
+
+========== R-Control Report ===========
+Number of Moves in Queue:  2
+
+----Motor 120 Report----
+StallGuard Sensor:  104
+CS Actual:          1767
+Current Position:   1574
+Target Position:    4294965296
+Steps to Go:        3514
+
+----Motor 177 Report----
+StallGuard Sensor:  0
+CS Actual:          1767
+Current Position:   1409
+Target Position:    4294965296
+Steps to Go:        3347
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  2
+
+----Motor 120 Report----
+StallGuard Sensor:  172
+CS Actual:          1767
+Current Position:   573
+Target Position:    4294965296
+Steps to Go:        2513
+
+----Motor 177 Report----
+StallGuard Sensor:  280
+CS Actual:          1767
+Current Position:   407
+Target Position:    4294965296
+Steps to Go:        2347
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  2
+
+----Motor 120 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   4294966871
+Target Position:    4294965296
+Steps to Go:        1507
+
+----Motor 177 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   4294966699
+Target Position:    4294965296
+Steps to Go:        1335
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  2
+
+----Motor 120 Report----
+StallGuard Sensor:  120
+CS Actual:          1767
+Current Position:   4294965867
+Target Position:    4294965296
+Steps to Go:        505
+
+----Motor 177 Report----
+StallGuard Sensor:  0
+CS Actual:          1767
+Current Position:   4294965697
+Target Position:    4294965296
+Steps to Go:        333
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  2
+
+----Motor 120 Report----
+StallGuard Sensor:  0
+CS Actual:          1767
+Current Position:   4294965296
+Target Position:    4294965296
+Steps to Go:        0
+
+----Motor 177 Report----
+StallGuard Sensor:  0
+CS Actual:          1767
+Current Position:   4294965296
+Target Position:    4294965296
+Steps to Go:        0
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+
+
+============== Loading Move... ==============
+
+
+========== R-Control Report ===========
+Number of Moves in Queue:  1
+
+----Motor 120 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   4294964894
+Target Position:    4294961296
+Steps to Go:        3530
+
+----Motor 177 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   4294965870
+Target Position:    2000
+Steps to Go:        3366
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  1
+
+----Motor 120 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   4294963891
+Target Position:    4294961296
+Steps to Go:        2529
+
+----Motor 177 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   4294966871
+Target Position:    2000
+Steps to Go:        2363
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  1
+
+----Motor 120 Report----
+StallGuard Sensor:  0
+CS Actual:          1767
+Current Position:   4294962890
+Target Position:    4294961296
+Steps to Go:        1528
+
+----Motor 177 Report----
+StallGuard Sensor:  0
+CS Actual:          1767
+Current Position:   576
+Target Position:    2000
+Steps to Go:        1370
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  1
+
+----Motor 120 Report----
+StallGuard Sensor:  32
+CS Actual:          1767
+Current Position:   4294961888
+Target Position:    4294961296
+Steps to Go:        526
+
+----Motor 177 Report----
+StallGuard Sensor:  156
+CS Actual:          1767
+Current Position:   1581
+Target Position:    2000
+Steps to Go:        365
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  1
+
+----Motor 120 Report----
+StallGuard Sensor:  180
+CS Actual:          1767
+Current Position:   4294961296
+Target Position:    4294961296
+Steps to Go:        0
+
+----Motor 177 Report----
+StallGuard Sensor:  180
+CS Actual:          1767
+Current Position:   2000
+Target Position:    2000
+Steps to Go:        0
+Next Move:     M0 - 1, 4000 steps | M1 - 0, 4000 steps
+
+
+============== Loading Move... ==============
+
+
+========== R-Control Report ===========
+Number of Moves in Queue:  0
+
+----Motor 120 Report----
+StallGuard Sensor:  110
+CS Actual:          1767
+Current Position:   4294961708
+Target Position:    4294965296
+Steps to Go:        3520
+
+----Motor 177 Report----
+StallGuard Sensor:  176
+CS Actual:          1767
+Current Position:   1414
+Target Position:    4294965296
+Steps to Go:        3352
+Next Move:     M0 - 1, -1 steps | M1 - 1, -1 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  0
+
+----Motor 120 Report----
+StallGuard Sensor:  116
+CS Actual:          1767
+Current Position:   4294962710
+Target Position:    4294965296
+Steps to Go:        2520
+
+----Motor 177 Report----
+StallGuard Sensor:  182
+CS Actual:          1767
+Current Position:   411
+Target Position:    4294965296
+Steps to Go:        2353
+Next Move:     M0 - 1, -1 steps | M1 - 1, -1 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  0
+
+----Motor 120 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   4294963710
+Target Position:    4294965296
+Steps to Go:        1520
+
+----Motor 177 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   4294966712
+Target Position:    4294965296
+Steps to Go:        1348
+Next Move:     M0 - 1, -1 steps | M1 - 1, -1 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  0
+
+----Motor 120 Report----
+StallGuard Sensor:  2
+CS Actual:          1767
+Current Position:   4294964711
+Target Position:    4294965296
+Steps to Go:        519
+
+----Motor 177 Report----
+StallGuard Sensor:  52
+CS Actual:          1767
+Current Position:   4294965711
+Target Position:    4294965296
+Steps to Go:        347
+Next Move:     M0 - 1, -1 steps | M1 - 1, -1 steps
+========== R-Control Report ===========
+Number of Moves in Queue:  0
+
+----Motor 120 Report----
+StallGuard Sensor:  146
+CS Actual:          1767
+Current Position:   4294965296
+Target Position:    4294965296
+Steps to Go:        0
+
+----Motor 177 Report----
+StallGuard Sensor:  146
+CS Actual:          1767
+Current Position:   4294965296
+Target Position:    4294965296
+Steps to Go:        0
+Next Move:     M0 - 1, -1 steps | M1 - 1, -1 steps

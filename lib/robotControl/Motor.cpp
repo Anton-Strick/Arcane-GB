@@ -15,7 +15,8 @@ Motor::Motor(uint8_t mid, TMC2209Stepper d, uint8_t diagP, uint8_t dirP,
               uint8_t stepP) :
               driver(d) {
     this->setPins(diagP, dirP, stepP);
-    this->setPosition();
+    this->setPosition((uint32_t) 0);
+    this->setDir(Clockwise);
 }
 
 
@@ -27,7 +28,7 @@ boolean Motor::init() {
     this->driver.begin();
     this->driver.toff(4); // Can be any value between 1-15
     this->driver.blank_time(24);
-    this->driver.rms_current(500); // mA
+    this->driver.rms_current(750); // mA
     this->driver.microsteps(8);
     this->driver.TCOOLTHRS((uint32_t) 0xFFFFF);
     this->driver.semin(0);
@@ -35,8 +36,6 @@ boolean Motor::init() {
     this->driver.shaft(false);
     this->driver.sedn((uint8_t) 0xb01);
     this->driver.SGTHRS(STALL_VALUE);
-
-    this->setTarget(0);
     return true;
 }
 
