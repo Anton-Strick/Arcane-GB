@@ -2,13 +2,16 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
+#include "config.h"
+#include "robotControl.hpp"
+
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * *
  * Replace these values with your local variables  *
  * * * * * * * * * * * * * * * * * * * * * * * * * */
-  const char* ssid = "SSID";                       //
-  const char* password = "password";               //
-  const char* url = "url";                         //
+  const char* ssid = "WiFi Name";                  //
+  const char* password = "Password";               //
+  const char* url = "http://example.com/index.html";//
 /////////////////////////////////////////////////////
 
 String move; // Contains last move from server
@@ -16,15 +19,13 @@ String move; // Contains last move from server
 unsigned long lastTime = 0;      // TODO: Replace with ISR
 unsigned long timerDelay = 5000; // ^^^^^^^^^^^^^^^^^^^^^^
 
-unsigned int count = 0; // 
-
 /*
  * Initializes a serial connection (Baud = 115200), a WiFi Connection
  * with the network denoted by ssid. Serial connection is used to
  * confirm status
  */
 void setup() {
-  Serial.begin(115200); // Should be the correct Baud
+  Serial.begin(9600); // Should be the correct Baud
 
   WiFi.begin(ssid, password);
 
@@ -41,7 +42,11 @@ void setup() {
  * the server                                                        
  */
 void loop() {
-  if ((millis() - lastTime) > timerDelay) {
+  static uint32_t lastTime = 0;
+  static uint16_t count = 0;
+  uint32_t ms = millis();
+  if ((ms - lastTime) > timerDelay) {
+    lastTime = ms;
     // Check WiFi status, cannot transmit if unconnected
     if (WiFi.status() == WL_CONNECTED) {
       count += 5;
@@ -56,15 +61,23 @@ void loop() {
       } // End connection loop
       Serial.printf("Connected to %s!\n", url);
 
-      //------------------- Recieve Move from Server -------------------//
-      move = client.getString();
-      if (move != NULL) {
-        Serial.printf("\nRecieved new move: %s\n\n", move);
-      } // End received move
+      int32_t httpCode = (int32_t) client.GET();
 
-      else {
-        Serial.println("\nNo move found...\n");
-      } // End no recieved move
+      //------------------- Recieve Move from Server -------------------//
+      if (httpCode > 0) {
+        move = client.getString();
+        if (move != NULL) {
+          Serial.printf("\nRecieved new move:"  );
+          Serial.println(move);
+        } // End received move
+
+        else {
+          Serial.println("\nNo move found...\n");
+        } // End no recieved move
+      }
+
+      else Serial.printf("\nRecieved error code:  %d\n", httpCode);
+      
     } // End WiFi Connected
     
     else {

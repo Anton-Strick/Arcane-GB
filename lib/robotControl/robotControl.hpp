@@ -4,41 +4,55 @@
 #include <Arduino.h>
 #include <Motor.hpp>
 #include <Queue.hpp>
+#include "config.hpp"
 
-class robotControl {
+
+/**
+ * Primary high-level control class for the H-Bot.
+ * @param q The current Queue of Moves planned by the 
+ *                      RobotController
+ * @param motors An array containing members of the Motor class used by the 
+ *               RobotController with parameters defined in config.hpp
+ */
+class RobotControl {
     private:
-        Queue q;
+        Queue* queue;
         Motor* motors[NUM_MOTORS];
+
     public:
-        //-------------------------- Get Functions --------------------------//
+        boolean moveComplete;
+        RobotControl(); // Default Constructor
+        //--------------------------- Get Methods ---------------------------//
 
 
-        //-------------------------- Set Functions --------------------------//
+        //--------------------------- Set Methods ---------------------------//
         
 
-        //------------------------ Helper Functions -------------------------//
-        void enableMotors() { 
-            digitalWrite(EN_PIN0, LOW);
-            digitalWrite(EN_PIN1, LOW); 
-        }
+        //========================== Helper Methods =========================//
+        /**
+         * Places a Move in the queue of the RobotController
+         */
+        void queueMove(Move* m) { this->queue->enQueue(m); }
+        /**
+         * Dequeues the next move in the RobotController's queue
+         * @return The Move just dequeued
+         */
+        Move* dequeueMove() { return this->queue->deQueue(); }
+        void disableMagnet() { digitalWrite(MAGNET_PIN, HIGH); }
+        void enableMagnet() { digitalWrite(MAGNET_PIN, HIGH); }
+        //------------------- Defined in RobotControl.cpp -------------------//
+        void disableMotors();
+        void enableMotors();
 
-        void queue(Move m) {
-            q.enQ(m);
-        }
-
-        Move dequeue() {
-            return q.deQ();
-        }
-
-        void disableMotors() { 
-            digitalWrite(EN_PIN0, HIGH);
-            digitalWrite(EN_PIN1, HIGH);
-        }
-
-        //------------------- Defined in robotControl.cpp -------------------//
-        void queueMove(Move m);
-        Move xyToMotors(int16_t dx, int16_t dy);
         void initializeMotors();
+        void initializeQueue();
+
+        void stepMotors();
+
+        void printReport();
+        
+        Move* xyToMotors(int16_t dx, int16_t dy);
+        void loadMove(Move* m);
 };
 
 #endif

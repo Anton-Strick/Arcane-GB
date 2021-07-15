@@ -21,7 +21,7 @@ using namespace TMC2208_n;
 class Motor {
     private:
         uint32_t motorPosition = 0;
-        uint32_t targetPosition;
+        uint32_t targetPosition = 0;
 
         uint8_t diagPin;
         uint8_t dirPin;
@@ -29,6 +29,8 @@ class Motor {
         uint8_t stepPin;
 
         TMC2209Stepper driver;
+
+        boolean isComplete = true;
 
     public:
         //-------------------------- Get Functions --------------------------//
@@ -38,8 +40,9 @@ class Motor {
         uint8_t getID() { return motorID; }
         uint16_t getSG() { return driver.SG_RESULT(); }
         uint16_t getCS() { return driver.cs2rms(driver.cs_actual()); }
+        boolean getComplete() { return isComplete; }
         //-------------------------- Set Functions --------------------------//
-        void setPosition() { motorPosition = 0; }
+        void setPosition(uint32_t p) { motorPosition = p; }
         
         void setDir(uint8_t d) { digitalWrite(dirPin, d); }
         void setPins(uint8_t diagP, uint8_t dirP, uint8_t sP) {
@@ -54,6 +57,7 @@ class Motor {
         //----------------------- Defined in Motor.cpp ----------------------//
         Motor(uint8_t mid, TMC2209Stepper d, uint8_t diagP, uint8_t dirP, 
               uint8_t stepP);
+        
         /**
          * Initializes TMC2209 Stepper Motor Driver
         */
