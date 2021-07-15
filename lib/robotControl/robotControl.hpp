@@ -38,7 +38,7 @@ class RobotControl {
          * @return The Move just dequeued
          */
         Move* dequeueMove(); 
-        void disableMagnet() { digitalWrite(MAGNET_PIN, HIGH); }
+        void disableMagnet() { digitalWrite(MAGNET_PIN, LOW); }
         void enableMagnet() { digitalWrite(MAGNET_PIN, HIGH); }
         //------------------- Defined in RobotControl.cpp -------------------//
         void disableMotors();
