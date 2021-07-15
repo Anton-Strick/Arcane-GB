@@ -31,7 +31,7 @@ void loop() {
     RUN_TEST(test_Disable_Magnet);    
     delay(1500);
 
-    if (loops < 3) {
+    if (loops >= 3) {
         UNITY_END();
     }
 
