@@ -42,7 +42,7 @@ void RobotControl::initializeMotors() {
         m->init();
     }
 
-    configMotorPins(); // located in config
+    configPins(); // located in config
 }
 
 /**

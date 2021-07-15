@@ -18,6 +18,7 @@ class RobotControl {
     private:
         Queue* queue;
         Motor* motors[NUM_MOTORS];
+
     public:
         boolean moveComplete;
         RobotControl(); // Default Constructor
@@ -36,7 +37,9 @@ class RobotControl {
          * Dequeues the next move in the RobotController's queue
          * @return The Move just dequeued
          */
-        Move* dequeueMove(); 
+        Move* dequeueMove() { return this->queue->deQueue(); }
+        void disableMagnet() { digitalWrite(MAGNET_PIN, HIGH); }
+        void enableMagnet() { digitalWrite(MAGNET_PIN, HIGH); }
         //------------------- Defined in RobotControl.cpp -------------------//
         void disableMotors();
         void enableMotors();

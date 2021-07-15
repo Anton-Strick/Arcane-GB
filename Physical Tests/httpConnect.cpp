@@ -9,8 +9,8 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * *
  * Replace these values with your local variables  *
  * * * * * * * * * * * * * * * * * * * * * * * * * */
-  const char* ssid = "The Pack Net";               //
-  const char* password = "3a$tmarInternet11202";   //
+  const char* ssid = "WiFi Name";                  //
+  const char* password = "Password";               //
   const char* url = "http://example.com/index.html";//
 /////////////////////////////////////////////////////
 

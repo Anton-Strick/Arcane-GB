@@ -87,6 +87,7 @@ void setup() {
     UNITY_BEGIN();
     RUN_TEST(test_WiFi_Connect);
     RUN_TEST(test_HTTP_Connect);
+    RUN_TEST(test_HTTP_Get);
     RUN_TEST(test_HTTP_Get_JSON);
 }
 

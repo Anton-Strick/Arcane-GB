@@ -56,7 +56,7 @@ void test_Motor_Set_Direction(void) {
 }
 
 void setup() {
-    configMotorPins(); // located in config
+    configPins(); // located in config
     UNITY_BEGIN();
     RUN_TEST(test_Motor_Initial_Position);
     RUN_TEST(test_Motor_Initial_Target);

@@ -30,8 +30,10 @@
 #define TXD1                26         // TX pin, can be any GPIO
 #define SERIAL_PORT1        Serial1
 
+
+#define MAGNET_PIN          14         // Used to toggle the magnet relay
 enum dir { AntiClockwise, Clockwise };
 
-void configMotorPins();
+void configPins();
 
 #endif

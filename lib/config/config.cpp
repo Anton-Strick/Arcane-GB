@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "config.hpp"
 
-void configMotorPins() {
+void configPins() {
     //----------------- Motor 0 Pin Configuration -----------------//
     pinMode(DIAG_PIN0, INPUT);
     pinMode(DIR_PIN0, OUTPUT);
@@ -14,4 +14,8 @@ void configMotorPins() {
     pinMode(DIR_PIN1, OUTPUT);
     pinMode(STEP_PIN1, OUTPUT);
     pinMode(EN_PIN1, OUTPUT);
+
+    //------------------------- Misc Pins -------------------------//
+
+    pinMode(MAGNET_PIN, OUTPUT);
 }
