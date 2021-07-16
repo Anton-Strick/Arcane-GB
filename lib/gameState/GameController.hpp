@@ -30,7 +30,7 @@ class GameController {
         //------------------ Defined in GameController.cpp ------------------//
         
         uint8_t getTransposition(array<uint8_t, 2> position);
-        array<uint8_t, 2> parseMove(String);
+        array<uint8_t, 2> parseMove(JsonMove jMove);
         boolean reportToServer(String message);
 };
 

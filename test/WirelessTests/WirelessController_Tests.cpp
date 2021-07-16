@@ -8,10 +8,12 @@
 #include "config.hpp"
 #include "RobotControl.hpp"
 
+String ssid = "The Pack Net";
+String password = "3a$tmarInternet11202";
+String url = "http://arduinojson.org/example.json";
+
 void test_WiFi_Connect(void) {
-    String ssid = "The Pack Net";
-    String password = "3a$tmarInternet11202";
-    String url = "http://example.com/index.html";
+
 
     WirelessController subject(ssid, password, url);
 
@@ -23,10 +25,6 @@ void test_WiFi_Connect(void) {
 
 void test_HTTP_Connect(void) {
     if(WiFi.status() == WL_CONNECTED) {
-        String ssid = "The Pack Net";
-        String password = "3a$tmarInternet11202";
-        String url = "http://example.com/index.html";
-
         WirelessController subject(ssid, password, url);
 
         if (subject.httpConnect())
@@ -40,10 +38,6 @@ void test_HTTP_Connect(void) {
 
 void test_HTTP_Get(void) {
     if (WiFi.status() == WL_CONNECTED) {
-        String ssid = "The Pack Net";
-        String password = "3a$tmarInternet11202";
-        String url = "http://example.com/index.html";
-
         WirelessController subject(ssid, password, url);
         if (subject.httpConnect()) {
             if (subject.httpGet() > 0) // Negative codes are errors
@@ -82,13 +76,34 @@ void test_HTTP_Get_JSON(void) {
     else TEST_FAIL_MESSAGE("UNABLE TO CONNECT TO WIFI");
 }
 
+void test_Parse_XN_To_Array(void) {
+    const char* xN = "h8";
+    std::array<uint8_t, 2> expected = {7, 7};
+
+    WirelessController subject(ssid, password, url);
+
+    std::array<uint8_t, 2> out;
+    out = subject.parseXNToArray(xN);
+    if (expected == out)
+        TEST_PASS();
+    
+    else if (expected[0] == out[0])
+        TEST_FAIL_MESSAGE("ERROR:  ROW MISMATCH");
+    
+    else if (expected[1] == out[1]) 
+        TEST_FAIL_MESSAGE("ERROR:  COL MISMATCH");
+
+    else TEST_FAIL_MESSAGE("ERROR: COL AND ROW MISMATCH");
+}
+
 void setup() {
-    configMotorPins(); // located in config
+    configPins(); // located in config
     UNITY_BEGIN();
     RUN_TEST(test_WiFi_Connect);
     RUN_TEST(test_HTTP_Connect);
     RUN_TEST(test_HTTP_Get);
     RUN_TEST(test_HTTP_Get_JSON);
+    RUN_TEST(test_Parse_XN_To_Array);
 }
 
 void loop() {
