@@ -1,8 +1,12 @@
 #include <Arduino.h>
-#include <array>
 #include <unity.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+
+#include <array>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 
 #include "WirelessController.hpp"
 #include "config.hpp"
@@ -52,30 +56,6 @@ void test_HTTP_Get(void) {
     else TEST_FAIL_MESSAGE("WIFI DISCONNECTED");
 }
 
-void test_HTTP_Get_JSON(void) {
-    if(WiFi.status() == WL_CONNECTED) {
-        HTTPClient http;
-        http.useHTTP10(true);
-        http.begin("http://arduinojson.org/example.json");
-        int32_t httpCode = (int32_t) http.GET();
-        
-        // Negative codes indicate an error
-        if(httpCode > 0) {
-            DynamicJsonDocument doc(2048);
-            DeserializationError err = 
-                deserializeJson(doc, http.getStream());
-            if (err)
-                TEST_FAIL_MESSAGE("ERROR DESERIALIZING JSON");
-
-            TEST_ASSERT_EQUAL(1351824120, doc["time"].as<long>());
-        }
-
-        else TEST_FAIL_MESSAGE("Received HTTP Error Code");
-    }
-
-    else TEST_FAIL_MESSAGE("UNABLE TO CONNECT TO WIFI");
-}
-
 void test_Parse_XN_To_Array(void) {
     const char* xN = "h8";
     std::array<uint8_t, 2> expected = {7, 7};
@@ -96,14 +76,51 @@ void test_Parse_XN_To_Array(void) {
     else TEST_FAIL_MESSAGE("ERROR: COL AND ROW MISMATCH");
 }
 
+void test_Get_Move(void) {
+    String json = 
+        "{\"turn\":0,"
+        "\"piece\":168,"
+        "\"from\":\"a1\","
+        "\"to\":\"a4\","
+        "\"special\":\"n\"}";
+    
+    StaticJsonDocument<jsonCapacity> doc;
+    DeserializationError err = deserializeJson(doc, json);
+    if (err)
+        TEST_FAIL_MESSAGE("ERROR DESERIALIZING JSON FILE");
+    
+    else {
+        WirelessController subject(ssid, password, url);
+        JsonMove test = subject.getMove(doc);
+        std::array<uint8_t, 2> start, end;
+        start = { 0, 0 };
+        end   = { 0, 3 };
+        JsonMove expected(0, 'n', start, end);
+
+        if (expected.turn != test.turn)
+            TEST_FAIL_MESSAGE("ERROR:  INCORRECT TURN NUMBER");
+
+        else if (expected.specialFlag != test.specialFlag)
+            TEST_FAIL_MESSAGE("ERROR:  INCORRECT SPECIAL FLAG");
+
+        else if (expected.startPos != test.startPos)
+            TEST_FAIL_MESSAGE("ERROR: INCORRECT START POSITION");
+        
+        else if (expected.endPos != test.endPos)
+            TEST_FAIL_MESSAGE("ERROR:  INCORRECT END POSITION");
+
+        TEST_PASS();
+    }
+}
+
 void setup() {
     configPins(); // located in config
     UNITY_BEGIN();
-    RUN_TEST(test_WiFi_Connect);
-    RUN_TEST(test_HTTP_Connect);
-    RUN_TEST(test_HTTP_Get);
-    RUN_TEST(test_HTTP_Get_JSON);
+    //RUN_TEST(test_WiFi_Connect);
+    //RUN_TEST(test_HTTP_Connect);
+    //RUN_TEST(test_HTTP_Get);
     RUN_TEST(test_Parse_XN_To_Array);
+    RUN_TEST(test_Get_Move);
 }
 
 void loop() {

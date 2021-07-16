@@ -34,10 +34,10 @@ struct JsonMove {
      * @param start an array with the initial coordinates (x, y)
      * @param end   an array with the terminal coordinates (x, y)
      */
-    JsonMove(uint8_t t, char flag, 
+    JsonMove(uint8_t turn, char flag, 
              array<uint8_t, 2> start, array<uint8_t, 2> end) {
-        turn = t;
-        specialFlag = flag;
+        turn = turn;
+        specialFlag = specialFlag;
         startPos = start;
         endPos = end;
     }
@@ -59,6 +59,7 @@ class WirelessController {
         String getSSID() { return ssid; }
         String getURL() { return url; }
         int httpGet() { return httpClient.GET(); }
+        WiFiClient httpGetStream() { return httpClient.getStream(); }
         
         //--------------------------- Set Methods ---------------------------//
 
@@ -73,9 +74,8 @@ class WirelessController {
         boolean connectWiFi(String ssid, String password);
         boolean connectWiFi();
         boolean httpConnect();
-        JsonMove getMove();
+        JsonMove getMove(StaticJsonDocument<jsonCapacity> doc);
         std::array<uint8_t, 2> parseXNToArray(const char* xN);
-        StaticJsonDocument<jsonCapacity> getJSON();
         void setMode(uint8_t mode);
         array<String, 2> getCredentials();
         boolean sendReport();

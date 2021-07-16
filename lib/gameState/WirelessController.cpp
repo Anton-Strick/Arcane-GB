@@ -1,8 +1,10 @@
 #include <Arduino.h>
-#include <array>
-#include "WirelessController.hpp"
 #include <WiFi.h>
 #include <HTTPClient.h>
+
+#include "WirelessController.hpp"
+
+#include <array>
 
 WirelessController::WirelessController(String s, String p, String u) {
     ssid = s;
@@ -35,29 +37,17 @@ boolean WirelessController::httpConnect() {
     return httpClient.begin(url);
 }
 
-JsonMove WirelessController::getMove() {
-    if (WiFi.status() == WL_CONNECTED) {
-        StaticJsonDocument<jsonCapacity> doc;
-        DeserializationError err = deserializeJson(doc, httpClient.getStream());
-        if (err) {
-            // TODO:  Error deserializing Json
-        }
+JsonMove WirelessController::getMove(StaticJsonDocument<jsonCapacity> doc) {
+    uint8_t turn;
+    char specialFlag;
+    std::array<uint8_t, 2> start, end;
 
-        else {
-            uint8_t turn;
-            char specialFlag;
-            std::array<uint8_t, 2> start, end;
-            turn = doc["turn"].as<uint8_t>();
-            specialFlag = doc["flag"].as<char>();
-            start = parseXNToArray(doc["from"].as<const char*>());
-            end = parseXNToArray(doc["to"].as<const char*>());
-            JsonMove(turn, specialFlag, start, end);
-        }
-    }
-    else {
-        connectWiFi();
-        getJSON(); // TODO:  Remove potential infinite loop 
-    }
+    turn = doc["turn"].as<uint8_t>();
+    specialFlag = doc["flag"].as<char>();
+    start = parseXNToArray(doc["from"].as<const char*>());
+    end = parseXNToArray(doc["to"].as<const char*>());
+    
+    return JsonMove(turn, specialFlag, start, end);
 }
 
 std::array<uint8_t, 2> WirelessController::parseXNToArray(const char* xN) {
