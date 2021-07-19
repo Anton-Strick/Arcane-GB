@@ -59,7 +59,7 @@ std::array<uint8_t, 2> WirelessController::parseXNToArray(const char* xN) {
      *     a & 0x1f = 0110 0001 * 0001 1111 = 0000 0001 (d1)
      *     z & 0x1f = 0111 1010 * 0001 1111 = 0001 1010 (d26)
      */
-    out[0] = (xN[0] & 0x1f) - 1; // a = 0, not 1
-    out[1] = (xN[1] & 0xf) - 1; // Similar Process
+    out[0] = (xN[0] & 0x1f) + 1; // a = 2, not 0, due to graveyard
+    out[1] = (xN[1] & 0xf) - 1; // Similar Process. No side
     return out;
 }

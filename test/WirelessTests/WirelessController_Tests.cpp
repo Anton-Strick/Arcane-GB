@@ -58,7 +58,7 @@ void test_HTTP_Get(void) {
 
 void test_Parse_XN_To_Array(void) {
     const char* xN = "h8";
-    std::array<uint8_t, 2> expected = {7, 7};
+    std::array<uint8_t, 2> expected = {9, 7};
 
     WirelessController subject(ssid, password, url);
 
