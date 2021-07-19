@@ -39,4 +39,8 @@ enum dir { AntiClockwise, Clockwise };
 
 void configPins();
 
+#define NUM_ROWS 12
+#define NUM_COLS 8
+#define MM_PER_SQUARE 37
+
 #endif
