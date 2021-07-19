@@ -53,6 +53,8 @@ class WirelessController {
         
     public :
         WirelessController(String pass, String ssid, String url);
+        WirelessController();
+        
         //--------------------------- Get Methods ---------------------------//
 
         String getPassword() { return password; }

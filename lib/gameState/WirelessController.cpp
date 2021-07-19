@@ -13,6 +13,10 @@ WirelessController::WirelessController(String s, String p, String u) {
     bluFiMode = WIFI;
 }
 
+WirelessController::WirelessController() {
+    
+}
+
 boolean WirelessController::connectWiFi(String ssid, String password) {
     const char* tmpSSID =  ssid.c_str();
     const char* tmpPass = password.c_str();
