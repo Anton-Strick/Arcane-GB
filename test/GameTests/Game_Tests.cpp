@@ -44,6 +44,17 @@ void test_Piece_Move(void) {
     TEST_ASSERT_EQUAL(true, test);
 }
 
+/**
+ * GameController Class Tests
+ */
+void test_Controller_Construction(void) {
+    
+}
+
+void test_Get_Transposition(void) {
+
+}
+
 void setup() {
     UNITY_BEGIN();
     RUN_TEST(test_Piece_Construction);
