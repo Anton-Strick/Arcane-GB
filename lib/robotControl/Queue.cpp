@@ -2,9 +2,9 @@
 #include "Queue.hpp"
 
 Queue::Queue() {
-    this->hasMoves = false;
-    this->head = new Move();
-    this->tail = this->head;
+    hasMoves = false;
+    head = new Move();
+    tail = head;
 }
 
 /**
@@ -36,8 +36,8 @@ void Queue::enQueue(uint8_t dirs[NUM_MOTORS], uint32_t steps[NUM_MOTORS]) {
 
 Move* Queue::deQueue() {
     if (this->tail == this->head) {
-        this->hasMoves = false;
-        return this->head; // Cannot deQ
+        hasMoves = false;
+        return head; // Cannot deQ
     }
 
     else {

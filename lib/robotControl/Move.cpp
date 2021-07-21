@@ -6,10 +6,10 @@
  * pointer points to itself - lending itself to be used as a head/tail
 */
 Move::Move() {
-    this->next = this;
+    next = this;
     for (int i = 0; i < NUM_MOTORS; i++) {
-        this->direction[i] = Clockwise;
-        this->numSteps[i] = -1; //4294967295
+        direction[i] = Clockwise;
+        numSteps[i] = -1; //uint = 4294967295
     }
 }
 
@@ -22,10 +22,10 @@ Move::Move() {
  *                                     from each motor, respectively.
  */
 Move::Move(uint8_t dirs[NUM_MOTORS], uint32_t steps[NUM_MOTORS]) {
-    this->next = NULL;
+    next = this;
     for (int i = 0 ; i < NUM_MOTORS ; i++) {
-        this->direction[i] = dirs[i];
-        this->numSteps[i] = steps[i];
+        direction[i] = dirs[i];
+        numSteps[i] = steps[i];
     }
 }
 
