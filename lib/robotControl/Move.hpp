@@ -2,6 +2,9 @@
 #define MOVE_HPP
 
 #include <Arduino.h>
+
+#include <array>
+
 #include "config.hpp"
 
 /**
@@ -11,8 +14,8 @@
 class Move {
     private :
         Move* next;
-        uint8_t direction[NUM_MOTORS];
-        uint32_t numSteps[NUM_MOTORS];
+        std::array<uint8_t, NUM_MOTORS> direction;
+        std::array<uint32_t, NUM_MOTORS> numSteps;
 
     public :
         Move(); // Default Constructor
@@ -21,8 +24,8 @@ class Move {
         //--------------------------- Get Methods ---------------------------//
 
         Move* getNext() {return this->next; }
-        uint8_t* getDirs() { return this->direction; }
-        uint32_t* getSteps() {return this->numSteps; }
+        std::array<uint8_t, NUM_MOTORS> getDirs() { return direction; }
+        std::array<uint32_t, NUM_MOTORS> getSteps() {return numSteps; }
 
         //--------------------------- Set Methods ---------------------------//
 

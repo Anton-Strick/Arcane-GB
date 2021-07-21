@@ -33,10 +33,7 @@ Move::Move(uint8_t dirs[NUM_MOTORS], uint32_t steps[NUM_MOTORS]) {
  * Deallocates the memory assigned to the Move instance
  */ 
 void Move::destroy() {
-    delete this->direction;
-    delete this->next;
-    delete this->numSteps;
-    delete this;
+    
 }
 
 /**
