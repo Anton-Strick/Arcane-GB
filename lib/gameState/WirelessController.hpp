@@ -2,9 +2,11 @@
 #define WIRELESSCONTROLLER_HPP
 
 #include <Arduino.h>
-#include <array>
 #include <ArduinoJson.h>
-#include <HTTPClient.h>
+#include <WiFi.h>
+#include <ArduinoWebsockets.h>
+
+#include <array>
 
 enum mode { Bluetooth, WIFI };
 
@@ -49,7 +51,8 @@ class WirelessController {
         String ssid;
         String url;
         uint8_t bluFiMode;
-        HTTPClient httpClient;
+        websockets::WebsocketsClient webSocket;
+        JsonMove newMove;
         
     public :
         WirelessController(String pass, String ssid, String url);
@@ -60,8 +63,6 @@ class WirelessController {
         String getPassword() { return password; }
         String getSSID() { return ssid; }
         String getURL() { return url; }
-        int httpGet() { return httpClient.GET(); }
-        WiFiClient httpGetStream() { return httpClient.getStream(); }
         
         //--------------------------- Set Methods ---------------------------//
 
@@ -75,12 +76,14 @@ class WirelessController {
         
         boolean connectWiFi(String ssid, String password);
         boolean connectWiFi();
-        boolean httpConnect();
         JsonMove getMove(StaticJsonDocument<jsonCapacity> doc);
         std::array<uint8_t, 2> parseXNToArray(const char* xN);
         void setMode(uint8_t mode);
         array<String, 2> getCredentials();
         boolean sendReport();
+
+        boolean socketConnect();
+        void socketMessageRecieved(websockets::WebsocketsMessage message);
 };
 
 #endif

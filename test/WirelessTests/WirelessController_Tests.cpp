@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <unity.h>
 #include <WiFi.h>
-#include <HTTPClient.h>
+#include <ArduinoWebsockets.h>
 
 #include <array>
 #include <iostream>
@@ -27,11 +27,11 @@ void test_WiFi_Connect(void) {
     else TEST_FAIL_MESSAGE("UNABLE TO CONNECT");
 }
 
-void test_HTTP_Connect(void) {
+void test_Socket_Connect(void) {
     if(WiFi.status() == WL_CONNECTED) {
         WirelessController subject(ssid, password, url);
 
-        if (subject.httpConnect())
+        if (subject.socketConnect())
             TEST_PASS();
 
         else TEST_FAIL_MESSAGE("UNABLE TO CONNECT TO URL");
@@ -40,14 +40,15 @@ void test_HTTP_Connect(void) {
     else TEST_FAIL_MESSAGE("WIFI DISCONNECTED");
 }
 
-void test_HTTP_Get(void) {
+/* 
+TODO:  Design unit test methodology for recieving websocket messages
+        - Spoofing with on-board server?
+        - Substituting game message with other message? 
+void test_Message_Recieved(void) {
     if (WiFi.status() == WL_CONNECTED) {
         WirelessController subject(ssid, password, url);
-        if (subject.httpConnect()) {
-            if (subject.httpGet() > 0) // Negative codes are errors
-                TEST_PASS();
-
-            else TEST_FAIL_MESSAGE("HTTP ERROR CODE THROWN");
+        if (subject.socketConnect()) {
+            
         }
 
         else TEST_FAIL_MESSAGE("UNABLE TO CONNECT TO URL");
@@ -55,6 +56,7 @@ void test_HTTP_Get(void) {
 
     else TEST_FAIL_MESSAGE("WIFI DISCONNECTED");
 }
+*/
 
 void test_Parse_XN_To_Array(void) {
     const char* xN = "h8";
@@ -117,8 +119,8 @@ void setup() {
     configPins(); // located in config
     UNITY_BEGIN();
     //RUN_TEST(test_WiFi_Connect);
-    //RUN_TEST(test_HTTP_Connect);
-    //RUN_TEST(test_HTTP_Get);
+    //RUN_TEST(test_Socket_Connect);
+    //RUN_TEST(test_Message_Recieved);
     RUN_TEST(test_Parse_XN_To_Array);
     RUN_TEST(test_Get_Move);
 }

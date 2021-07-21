@@ -1,16 +1,17 @@
 #include <Arduino.h>
 #include <WiFi.h>
-#include <HTTPClient.h>
-
-#include "WirelessController.hpp"
+#include <ArduinoWebsockets.h>
 
 #include <array>
+
+#include "WirelessController.hpp"
 
 WirelessController::WirelessController(String s, String p, String u) {
     ssid = s;
     password = p;
     url = u;
     bluFiMode = WIFI;
+    webSocket.onMessage(socketMessageRecieved);
 }
 
 WirelessController::WirelessController() {
@@ -37,8 +38,10 @@ boolean WirelessController::connectWiFi() {
     return connectWiFi(ssid, password);
 }
 
-boolean WirelessController::httpConnect() {
-    return httpClient.begin(url);
+boolean WirelessController::socketConnect() {
+    if (WiFi.status() != WL_CONNECTED)
+        connectWiFi(ssid, password);
+    return webSocket.connect(url, 8080, "/");
 }
 
 JsonMove WirelessController::getMove(StaticJsonDocument<jsonCapacity> doc) {
@@ -66,4 +69,11 @@ std::array<uint8_t, 2> WirelessController::parseXNToArray(const char* xN) {
     out[0] = (xN[0] & 0x1f) + 1; // a = 2, not 0, due to graveyard
     out[1] = (xN[1] & 0xf) - 1; // Similar Process. No side
     return out;
+}
+
+
+void WirelessController::socketMessageRecieved(websockets::WebsocketsMessage message) {
+    StaticJsonDocument<jsonCapacity> doc;
+    DeserializationError err = deserializeJson(doc, message.data());
+    newMove = getMove(doc);
 }
