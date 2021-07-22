@@ -31,8 +31,7 @@
 #define SERIAL_PORT1        Serial2
 
 //--------------------------------- Electromagnet Definition -------------------------//
-#define EM_LOGIC            23
-#define MAGNET_PIN          14         // Used to toggle the magnet relay
+#define MAGNET_PIN          23         // Used to toggle the magnet relay
 
 enum dir { AntiClockwise, Clockwise };
 
