@@ -12,9 +12,9 @@ Queue::Queue() {
  * @param m {Move} a valid Move object. It's 'next' pointer will be lost
  */
 void Queue::enQueue(Move m) {
+    m.setNext(*head);
     tail->setNext(m); // Inserts node at end of list
     setTail(tail->getNext());  // Move becomes the tail
-    tail->setNext(*head); // Preserve the loop
 
     if (!hasMoves)
         hasMoves = true;
@@ -34,25 +34,21 @@ void Queue::enQueue(std::array<uint8_t, NUM_MOTORS> dirs, std::array<uint32_t, N
     this->enQueue(*newMove);
 }
 
-Move* Queue::deQueue() {
+Move Queue::deQueue() {
     if (!hasMoves) {
-        return head; // Cannot deQ
+        return *head; // Cannot deQ
     }
 
     else {
-        Move* tmp = this->head->getNext(); // Isolate desired move
+        Move tmp = head->getNext(); // Isolate desired move
 
-        if (tmp == this->tail) { // On Empty
-            this->tail = this->head;
-            this->tail->setNext(*head);
-            this->hasMoves = false;
-        }
-        head->setNext(*tmp->getNext()); // Remove from queue
-
-        this->setSize(queueSize - 1);
-        if (queueSize == 0) {
+        if (tmp.getNext() == getHead()) { // On last move
             hasMoves = false;
-        }
+        } // End on Last Move
+
+        head->setNext(tmp.getNext());
+
+        queueSize -= 1;
         
         return tmp; // Return freshly de-queued move
     }
