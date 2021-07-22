@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
 #include <TMCStepper.h>
+
+#include "config.hpp"
 #include "Motor.hpp"
 
 using namespace TMC2208_n;
@@ -97,11 +99,6 @@ void Motor::displayReport() {
 
 }
 
-TMC2209Stepper createDriver(HardwareSerial serial, float RS, uint8_t addr) {
-    TMC2209Stepper tmp(&serial, RS, addr);
-    return tmp;
-}
-
 HardwareSerial getSerial(uint8_t s) {
     switch(s) {
         case 0 :
@@ -113,4 +110,19 @@ HardwareSerial getSerial(uint8_t s) {
         default :
             return Serial;
     }
+}
+
+Motor& Motor::operator= (const Motor& param) {
+    motorPosition = param.motorPosition;
+    targetPosition = param.targetPosition;
+
+    motorID = param.motorID;
+
+    diagPin = param.diagPin;
+    dirPin = param.dirPin;
+    stepPin = param.stepPin;
+
+    isComplete = param.isComplete;
+
+    return *this;
 }

@@ -14,7 +14,7 @@
 class Move {
     private :
         Move* next;
-        std::array<uint8_t, NUM_MOTORS> direction;
+        std::array<uint8_t, NUM_MOTORS> dirs;
         std::array<uint32_t, NUM_MOTORS> numSteps;
 
     public :
@@ -23,19 +23,25 @@ class Move {
 
         //--------------------------- Get Methods ---------------------------//
 
-        Move* getNext() {return next; }
-        std::array<uint8_t, NUM_MOTORS> getDirs() { return direction; }
+        Move getNext() {return *next; }
+        std::array<uint8_t, NUM_MOTORS> getDirs() { return dirs; }
         std::array<uint32_t, NUM_MOTORS> getSteps() {return numSteps; }
 
         //--------------------------- Set Methods ---------------------------//
 
         void setNext(Move m) { next = &m; }
+        void setDirs(std::array<uint8_t, NUM_MOTORS> d) { dirs = d; }
+        void setNumSteps(std::array<uint32_t, NUM_MOTORS> nS) { numSteps = nS; }
 
         //========================== Helper Methods =========================//
         
         void destroy();
 
         void printMove();
+
+        bool operator== (const Move& param);
+        bool operator!= (const Move& param);
+        Move& operator= (const Move& param);
 };
 
 #endif
