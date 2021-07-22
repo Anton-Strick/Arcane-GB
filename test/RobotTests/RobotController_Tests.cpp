@@ -8,13 +8,13 @@
 void test_Enable_Magnet(void) {
     RobotControl subject;
     subject.enableMagnet();
-    TEST_ASSERT_EQUAL(HIGH, digitalRead(MAGNET_PIN));
+    TEST_ASSERT_EQUAL(LOW, digitalRead(MAGNET_PIN));
 }
 
 void test_Disable_Magnet(void) {
     RobotControl subject;
     subject.disableMagnet();
-    TEST_ASSERT_EQUAL(LOW, digitalRead(MAGNET_PIN));
+    TEST_ASSERT_EQUAL(HIGH, digitalRead(MAGNET_PIN));
 }
 
 void setup() {
@@ -31,7 +31,7 @@ void loop() {
     RUN_TEST(test_Disable_Magnet);    
     delay(1500);
 
-    if (loops < 3) {
+    if (loops > 5) {
         UNITY_END();
     }
 
