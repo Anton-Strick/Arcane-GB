@@ -31,7 +31,7 @@ void Queue::enQueue(Move m) {
  */
 void Queue::enQueue(std::array<uint8_t, NUM_MOTORS> dirs, std::array<uint32_t, NUM_MOTORS> steps) {
     Move* newMove = new Move(dirs, steps);
-    this->enQueue(*newMove);
+    enQueue(*newMove);
 }
 
 Move Queue::deQueue() {

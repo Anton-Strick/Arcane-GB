@@ -70,8 +70,8 @@ class Motor {
         void displayReport();
 
         void setTarget(uint32_t t);
-};
 
-TMC2209Stepper createDriver(HardwareSerial serial, float RS, uint8_t addr);
+        Motor& operator= (const Motor& param);
+};
 
 #endif

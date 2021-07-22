@@ -11,7 +11,7 @@ WirelessController::WirelessController(String s, String p, String u) {
     password = p;
     url = u;
     bluFiMode = WIFI;
-    webSocket.onMessage(socketMessageRecieved);
+    //webSocket.onMessage(socketMessageRecieved);
 }
 
 WirelessController::WirelessController() {

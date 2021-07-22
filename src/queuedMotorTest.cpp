@@ -51,6 +51,8 @@ void setup() {
     delay(250);
 
     //----------------------------- Initialize RobotControl ---------------------------//
+    //SERIAL_PORT0.begin(115200, SERIAL_8N1, RXD0, TXD0);
+    //SERIAL_PORT1.begin(115200, SERIAL_8N1, RXD1, TXD1);
     controller.initializeMotors();
 
     Serial.println("Motors initialized, queueing moves");
@@ -79,13 +81,13 @@ void loop() {
 
     if ((ms - lastTime) > 1000) { // Print Reports every 1/2 second
         lastTime = ms;
-        controller.printReport();
+        //controller.printReport();
         if (controller.moveComplete) { // Loads moves upon completion
             Serial.printf("\n\n");
             Serial.println("============== Loading Move... ==============");
             Serial.printf("\n\n");
             delay(250);
-            controller.loadMove(controller.dequeueMove());
+            controller.printReport();
             timesComplete += 1;
         }
 

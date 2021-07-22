@@ -2,6 +2,9 @@
 #define MOTORCONTROL_HPP
 
 #include <Arduino.h>
+
+#include <array>
+
 #include <Motor.hpp>
 #include <Queue.hpp>
 #include "config.hpp"
@@ -16,11 +19,11 @@
  */
 class RobotControl {
     private:
-        Queue* queue;
-        Motor* motors[NUM_MOTORS];
-
+        Queue queue;
+        std::array<Motor *, NUM_MOTORS> motors;
+        
     public:
-        boolean moveComplete;
+        bool moveComplete = true;
         RobotControl(); // Default Constructor
         //--------------------------- Get Methods ---------------------------//
 
@@ -32,12 +35,12 @@ class RobotControl {
         /**
          * Places a Move in the queue of the RobotController
          */
-        void queueMove(Move m) { this->queue->enQueue(m); }
+        void queueMove(Move m) { queue.enQueue(m); }
         /**
          * Dequeues the next move in the RobotController's queue
          * @return The Move just dequeued
          */
-        Move* dequeueMove(); 
+        Move dequeueMove(); 
         void disableMagnet() { digitalWrite(MAGNET_PIN, HIGH); }
         void enableMagnet() { digitalWrite(MAGNET_PIN, LOW); }
         //------------------- Defined in RobotControl.cpp -------------------//
@@ -45,14 +48,13 @@ class RobotControl {
         void enableMotors();
 
         void initializeMotors();
-        void initializeQueue();
 
         void stepMotors();
+        void loadMove();
 
         void printReport();
         
-        Move* xyToMotors(int16_t dx, int16_t dy);
-        void loadMove(Move* m);
+        Move xyToMotors(int16_t dx, int16_t dy);
 };
 
 #endif
