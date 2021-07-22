@@ -56,7 +56,7 @@ void Motor::step()  {
         }
     } // End motor reached target
     else
-        this->isComplete = true;
+        isComplete = true;
 }
 
 uint32_t Motor::getStepsToGo() {
@@ -85,7 +85,7 @@ void Motor::setTarget(uint32_t t) {
 }
 
 void Motor::displayReport() {
-    Serial.printf("\n----Motor %d Report----\n", this->getID());
+    Serial.printf("\n----Motor %u Report----\n", getID());
     Serial.printf("StallGuard Sensor:  ");
     Serial.println(this->getSG(), DEC);
     Serial.printf("CS Actual:          ");

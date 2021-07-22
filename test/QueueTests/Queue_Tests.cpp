@@ -1,25 +1,12 @@
 #include <Arduino.h>
 #include <unity.h>
 
+#include <queue>
+
 #include "Queue.hpp"
 
 void test_Create_Queue(void) {
     Queue subject;
-
-    if (subject.hasMoves != false) {
-        TEST_FAIL_MESSAGE("ERROR:  INITIALIZES WITH HAS MOVES");
-    }
-
-    if (subject.getSize() != uint8_t(0)) {
-        TEST_FAIL_MESSAGE("ERROR:  INITIALIZES WITH SIZE > 0");
-    }
-}
-
-void test_Is_Head(void) {
-    Queue subject;
-
-    if(!subject.isHead(subject.getHead()))
-        TEST_FAIL_MESSAGE("ERROR:  CANNOT IDENTIFY HEAD OF QUEUE");
 }
 
 void test_Enqueue(void) {
@@ -42,10 +29,6 @@ void test_Enqueue(void) {
     if (subject.getNextMove().getDirs() != dirs) {
         TEST_FAIL_MESSAGE("ERROR:  INCORRECT MOTOR DIRECTIONS");
     } 
-
-    if (subject.getNextMove().getNext() != subject.getHead()) {
-        TEST_FAIL_MESSAGE("ERROR:  DID NOT PLACE TAIL AS NEXT MOVE");
-    }
 }
 
 void test_Dequeue(void) {
@@ -75,10 +58,6 @@ void test_Dequeue(void) {
         if (test.getDirs() != expected.getDirs()) {
             TEST_FAIL_MESSAGE("ERROR:  INCORRECT DIRECTIONS RETURNED");
         }
-
-        if (subject.getNextMove() != subject.getHead()) {
-            TEST_FAIL_MESSAGE("ERROR:  QUEUE STRUCTURE WAS NOT MAINTAINED");
-        }
     }
 
     catch(...) {
@@ -89,7 +68,6 @@ void test_Dequeue(void) {
 void setup() {
     UNITY_BEGIN();
     RUN_TEST(test_Create_Queue);
-    RUN_TEST(test_Is_Head);
     RUN_TEST(test_Enqueue);
     RUN_TEST(test_Dequeue);
 }

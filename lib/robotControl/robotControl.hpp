@@ -27,6 +27,7 @@ class RobotControl {
         RobotControl(); // Default Constructor
         //--------------------------- Get Methods ---------------------------//
 
+        Move getNextMove() { return queue.getNextMove(); }
 
         //--------------------------- Set Methods ---------------------------//
         
@@ -40,7 +41,7 @@ class RobotControl {
          * Dequeues the next move in the RobotController's queue
          * @return The Move just dequeued
          */
-        Move dequeueMove(); 
+        Move dequeueMove() { return queue.deQueue(); } 
         void disableMagnet() { digitalWrite(MAGNET_PIN, HIGH); }
         void enableMagnet() { digitalWrite(MAGNET_PIN, LOW); }
         //------------------- Defined in RobotControl.cpp -------------------//

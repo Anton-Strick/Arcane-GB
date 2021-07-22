@@ -6,7 +6,6 @@
  * pointer points to itself - lending itself to be used as a head/tail
 */
 Move::Move() {
-    next = this;
     for (int i = 0; i < NUM_MOTORS; i++) {
         dirs[i] = Clockwise;
         numSteps[i] = -1; //uint = 4294967295
@@ -22,7 +21,6 @@ Move::Move() {
  *                                     from each motor, respectively.
  */
 Move::Move(std::array<uint8_t, NUM_MOTORS> dir, std::array<uint32_t, NUM_MOTORS> steps) {
-    next = this;
     for (int i = 0 ; i < NUM_MOTORS ; i++) {
         dirs[i] = dir[i];
         numSteps[i] = steps[i];
@@ -50,7 +48,6 @@ bool Move::operator== (const Move& param) {
     bool out = true;
     out = out && (dirs == param.dirs);
     out = out && (numSteps == param.numSteps);
-    out = out && (next = param.next);
 
     return out;
 }
@@ -62,7 +59,6 @@ bool Move::operator!= (const Move& param) {
 Move& Move::operator= (const Move& param) {
     dirs = param.dirs;
     numSteps = param.numSteps;
-    next = param.next;
 
     return *this;
 }

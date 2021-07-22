@@ -22,7 +22,7 @@ void setup() {
     //------------------------------ Connect to Computer ------------------------------//
     Serial.begin(115200);
     Serial.println("Start");
-    delay(250);
+    delay(5000);
 
     //------------------------------- Prepare Movements -------------------------------//
     std::array<uint8_t, NUM_MOTORS> tmpDirs;
@@ -81,13 +81,14 @@ void loop() {
 
     if ((ms - lastTime) > 1000) { // Print Reports every 1/2 second
         lastTime = ms;
-        //controller.printReport();
+        controller.printReport();
         if (controller.moveComplete) { // Loads moves upon completion
             Serial.printf("\n\n");
-            Serial.println("============== Loading Move... ==============");
-            Serial.printf("\n\n");
+            Serial.println("============== Loading Move... ==============\n");
+            controller.getNextMove().printMove();
+            controller.loadMove();
+            Serial.printf("\n");
             delay(250);
-            controller.printReport();
             timesComplete += 1;
         }
 
@@ -101,7 +102,7 @@ void loop() {
 
 void timerInit() {
     cli(); // Stops Interrupts
-    timer = timerBegin(3, 8, true);
+    timer = timerBegin(3, 4, true);
     timerAttachInterrupt(timer, &stepperISR, true);
     timerAlarmWrite(timer, 10000, true);
     timerAlarmEnable(timer);

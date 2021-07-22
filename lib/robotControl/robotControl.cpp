@@ -50,10 +50,6 @@ void RobotControl::stepMotors() {
     }
 
     moveComplete = temp;
-
-    if (moveComplete && queue.hasMoves) {
-        loadMove();
-    }
 }
 
 /**
@@ -86,10 +82,6 @@ void RobotControl::printReport() {
     motors[1]->displayReport();
     Serial.printf("\nNext Move:     ");
     queue.getTail().printMove();
-}
-
-Move RobotControl::dequeueMove() {
-    return queue.deQueue(); 
 }
 
 void RobotControl::loadMove() {
