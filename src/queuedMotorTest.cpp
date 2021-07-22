@@ -2,11 +2,11 @@
 #include <robotControl.hpp>
 
 
-Move* toTheRight;
-Move* toTheLeft;
-Move* nowKick;
-Move* nowWalkItByYourself;
-RobotControl* controller;
+Move toTheRight;
+Move toTheLeft;
+Move nowKick;
+Move nowWalkItByYourself;
+RobotControl controller;
 
 volatile boolean complete;
 volatile uint32_t steps[NUM_MOTORS] = {0, 0};
@@ -20,47 +20,54 @@ void displaySteps();
 
 void setup() {
     //------------------------------ Connect to Computer ------------------------------//
-    Serial.begin(9600);
-    while (!Serial);
-
-    Serial.println("\nStart");
+    Serial.begin(115200);
+    Serial.println("Start");
+    delay(250);
 
     //------------------------------- Prepare Movements -------------------------------//
-    uint8_t tmpDirs[NUM_MOTORS];
-    uint32_t tmpSteps[NUM_MOTORS];
+    std::array<uint8_t, NUM_MOTORS> tmpDirs;
+    std::array<uint32_t, NUM_MOTORS> tmpSteps;
 
     tmpDirs[0] = Clockwise; tmpDirs[1] = Clockwise;
-    tmpSteps[0] = STEPS_PER_MM * 25; tmpSteps[1] = STEPS_PER_MM * 25;
-    toTheRight = new Move(tmpDirs, tmpSteps);
+    tmpSteps[0] = STEPS_PER_MM * MM_PER_SQUARE * 2; 
+    tmpSteps[1] = STEPS_PER_MM * MM_PER_SQUARE * 2;
+    toTheRight.setDirs(tmpDirs);
+    toTheRight.setNumSteps(tmpSteps);
 
     tmpDirs[0] = AntiClockwise; tmpDirs[1] = AntiClockwise;
-    tmpSteps[0] = STEPS_PER_MM * 50; tmpSteps[1] = STEPS_PER_MM * 50;
-    toTheLeft = new Move(tmpDirs, tmpSteps);
+    toTheLeft.setDirs(tmpDirs);
+    toTheLeft.setNumSteps(tmpSteps);
 
     tmpDirs[1] = Clockwise;
 
-    nowKick = new Move(tmpDirs, tmpSteps);
+    nowKick.setDirs(tmpDirs);
+    nowKick.setNumSteps(tmpSteps);
 
     tmpDirs[0] = Clockwise; tmpDirs[1] = AntiClockwise;
-    nowWalkItByYourself = new Move(tmpDirs, tmpSteps);
+    nowWalkItByYourself.setDirs(tmpDirs);
+    nowWalkItByYourself.setNumSteps(tmpSteps);
 
+    Serial.println("Finished creating moves, initializing motors");
+    delay(250);
 
     //----------------------------- Initialize RobotControl ---------------------------//
-    controller = new RobotControl();
-    controller->initializeMotors();
+    controller.initializeMotors();
 
-    controller->queueMove(toTheRight);
+    Serial.println("Motors initialized, queueing moves");
+    delay(250);
+    
+    controller.queueMove(toTheRight);
     Serial.print("QUEUED:   ");
-    toTheRight->printMove();
-    controller->queueMove(toTheLeft);
+    toTheRight.printMove();
+    controller.queueMove(toTheLeft);
     Serial.print("QUEUED:   ");
-    toTheLeft->printMove();
-    controller->queueMove(nowKick);
+    toTheLeft.printMove();
+    controller.queueMove(nowKick);
     Serial.print("QUEUED:   ");
-    nowKick->printMove();
-    controller->queueMove(nowWalkItByYourself);
+    nowKick.printMove();
+    controller.queueMove(nowWalkItByYourself);
     Serial.print("QUEUED:   ");
-    nowWalkItByYourself->printMove();
+    nowWalkItByYourself.printMove();
 
     timerInit();
 }
@@ -72,13 +79,13 @@ void loop() {
 
     if ((ms - lastTime) > 1000) { // Print Reports every 1/2 second
         lastTime = ms;
-        controller->printReport();
-        if (controller->moveComplete) { // Loads moves upon completion
+        controller.printReport();
+        if (controller.moveComplete) { // Loads moves upon completion
             Serial.printf("\n\n");
             Serial.println("============== Loading Move... ==============");
             Serial.printf("\n\n");
             delay(250);
-            controller->loadMove(controller->dequeueMove());
+            controller.loadMove(controller.dequeueMove());
             timesComplete += 1;
         }
 
@@ -101,7 +108,7 @@ void timerInit() {
 
 
 void IRAM_ATTR stepperISR() {
-        controller->stepMotors();
+        controller.stepMotors();
 }
 
 void displaySteps() {
