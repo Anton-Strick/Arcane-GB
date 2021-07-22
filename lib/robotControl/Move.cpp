@@ -21,7 +21,7 @@ Move::Move() {
  * @param steps {uint32_t[NUM_MOTORS]} Contains the number of steps required 
  *                                     from each motor, respectively.
  */
-Move::Move(uint8_t dirs[NUM_MOTORS], uint32_t steps[NUM_MOTORS]) {
+Move::Move(std::array<uint8_t, NUM_MOTORS> dirs, std::array<uint32_t, NUM_MOTORS> steps) {
     next = this;
     for (int i = 0 ; i < NUM_MOTORS ; i++) {
         direction[i] = dirs[i];
@@ -33,7 +33,7 @@ Move::Move(uint8_t dirs[NUM_MOTORS], uint32_t steps[NUM_MOTORS]) {
  * Deallocates the memory assigned to the Move instance
  */ 
 void Move::destroy() {
-    
+
 }
 
 /**

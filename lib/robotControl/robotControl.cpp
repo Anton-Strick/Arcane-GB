@@ -71,11 +71,11 @@ Move* RobotControl::xyToMotors(int16_t dX, int16_t dY) {
     int16_t dA = (0.5) * (dX + dY);
     int16_t dB = (0.5) * (dX - dY);
 
-    uint8_t dirs[NUM_MOTORS];
+    std::array<uint8_t, NUM_MOTORS> dirs;
     dirs[0] = (dA > 0) ? AntiClockwise : Clockwise;
     dirs[1] = (dB > 0) ? AntiClockwise : Clockwise;
 
-    uint32_t steps[NUM_MOTORS];
+    std::array<uint32_t, NUM_MOTORS> steps;
     steps[0] = (dA > 0) ? (uint32_t) dA : (uint32_t) (dA * -1);
     steps[1] = (dB > 0) ? (uint32_t) dB : (uint32_t) (dB * -1);
 
@@ -100,8 +100,8 @@ Move* RobotControl::dequeueMove() {
 }
 
 void RobotControl::loadMove(Move* m ) {
-    uint8_t* dirs = m->getDirs();
-    uint32_t* steps = m->getSteps();
+    std::array<uint8_t, NUM_MOTORS> dirs = m->getDirs();
+    std::array<uint32_t, NUM_MOTORS> steps = m->getSteps();
     for (int i = 0 ; i < NUM_MOTORS ; i++) {
         this->motors[i]->setDir(dirs[i]);
         this->motors[i]->setTarget(steps[i]);

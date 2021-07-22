@@ -19,17 +19,17 @@ class Move {
 
     public :
         Move(); // Default Constructor
-        Move(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]);
+        Move(std::array<uint8_t, NUM_MOTORS> d, std::array<uint32_t, NUM_MOTORS> s);
 
         //--------------------------- Get Methods ---------------------------//
 
-        Move* getNext() {return this->next; }
+        Move* getNext() {return next; }
         std::array<uint8_t, NUM_MOTORS> getDirs() { return direction; }
         std::array<uint32_t, NUM_MOTORS> getSteps() {return numSteps; }
 
         //--------------------------- Set Methods ---------------------------//
 
-        void setNext(Move* m) { this->next = m; }
+        void setNext(Move m) { next = &m; }
 
         //========================== Helper Methods =========================//
         

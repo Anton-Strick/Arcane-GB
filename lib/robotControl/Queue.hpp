@@ -18,9 +18,10 @@ class Queue {
         
         //--------------------------- Get Methods ---------------------------//
 
-        Move* getHead() { return this->head; }
-        Move* getTail() { return this->tail; }
+        Move* getHead() { return head; }
+        Move* getTail() { return tail; }
         uint8_t getSize() { return this->queueSize; }
+        Move* getNextMove() { return head->getNext(); }
 
         //--------------------------- Set Methods ---------------------------//
 
@@ -29,8 +30,8 @@ class Queue {
         void setTail(Move* m) { this->tail = m; }
 
         //========================== Helper Methods =========================//
-        void enQueue(Move* m);
-        void enQueue(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]);
+        void enQueue(Move m);
+        void enQueue(std::array<uint8_t, NUM_MOTORS> dirs, std::array<uint32_t, NUM_MOTORS> steps);
         Move* deQueue();
 };
 
