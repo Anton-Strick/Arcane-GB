@@ -85,11 +85,15 @@ void RobotControl::printReport() {
 }
 
 void RobotControl::loadMove() {
-    moveComplete = false;
-    Move tmp = dequeueMove();
+    if (queue.hasMoves()) { // If has Moves
+        moveComplete = false;
+        Move tmp = dequeueMove();
 
-    for (uint8_t i = 0 ; i < NUM_MOTORS ; i++) {
-        motors[i]->setDir(tmp.getDirs()[i]);
-        motors[i]->setTarget(tmp.getSteps()[i]);
-    }
+        for (uint8_t i = 0 ; i < NUM_MOTORS ; i++) {
+            motors[i]->setDir(tmp.getDirs()[i]);
+            motors[i]->setTarget(tmp.getSteps()[i]);
+        }
+    } // End has Moves
+
+    // No action if ! has moves
 }

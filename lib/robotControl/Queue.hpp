@@ -22,7 +22,7 @@ class Queue {
         Move getTail() { return stdQueue.back(); }
         uint8_t getSize() { return stdQueue.size(); }
         Move getNextMove() { return getHead(); } // Kept for depracated code
-        bool hasMoves() { return stdQueue.empty(); }
+        bool hasMoves() { return !stdQueue.empty(); }
 
         //--------------------------- Set Methods ---------------------------//
 
