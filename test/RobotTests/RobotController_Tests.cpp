@@ -89,12 +89,12 @@ void loop() {
     static uint8_t loops = 0;
 
     RUN_TEST(test_Enable_Magnet);
-    delay(1500);
+    delay(3000);
 
     RUN_TEST(test_Disable_Magnet);    
-    delay(1500);
+    delay(3000);
 
-    if (loops >= 0) {
+    if (loops >= 1000) {
 
         UNITY_END();
     }

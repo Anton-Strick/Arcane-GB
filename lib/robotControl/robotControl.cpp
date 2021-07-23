@@ -85,14 +85,22 @@ void RobotControl::printReport() {
 }
 
 void RobotControl::loadMove() {
+    disableMagnet();
     if (queue.hasMoves()) { // If has Moves
         moveComplete = false;
         Move tmp = dequeueMove();
 
+        // Motor direction and steps
         for (uint8_t i = 0 ; i < NUM_MOTORS ; i++) {
             motors[i]->setDir(tmp.getDirs()[i]);
             motors[i]->setTarget(tmp.getSteps()[i]);
         }
+
+        // Magnet disable or enable
+        if (tmp.getMagnetEnabled()) {
+            enableMagnet();
+        }
+
     } // End has Moves
 
     // No action if ! has moves

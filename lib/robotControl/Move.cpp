@@ -14,7 +14,7 @@ Move::Move() {
 
 /**
  * A single node of a linked list containing the direction and magnitude 
- * of the travel required by each motor
+ * of the travel required by each motor. (Assumes magnet is disabled)
  * @param dirs {uint8_t[NUM_MOTORS]} Contains the direction flag of each motor 
  *                                   contained at the corresponding index
  * @param steps {uint32_t[NUM_MOTORS]} Contains the number of steps required 
@@ -25,6 +25,22 @@ Move::Move(std::array<uint8_t, NUM_MOTORS> dir, std::array<uint32_t, NUM_MOTORS>
         dirs[i] = dir[i];
         numSteps[i] = steps[i];
     }
+}
+
+/**
+ * A single node of a linked list containing the direction and magnitude 
+ * of the travel required by each motor as well as if the magnet is enabled
+ * @param dirs {uint8_t[NUM_MOTORS]} Contains the direction flag of each motor 
+ *                                   contained at the corresponding index
+ * @param steps {uint32_t[NUM_MOTORS]} Contains the number of steps required 
+ *                                     from each motor, respectively.
+ */
+Move::Move(std::array<uint8_t, NUM_MOTORS> dir, std::array<uint32_t, NUM_MOTORS> steps, bool magEnable) {
+    for (int i = 0 ; i < NUM_MOTORS ; i++) {
+        dirs[i] = dir[i];
+        numSteps[i] = steps[i];
+    }
+    magnetEnabled = magEnable;
 }
 
 /**

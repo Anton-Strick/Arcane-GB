@@ -4,7 +4,7 @@
 #define CONFIG_HPP
 
 #define NUM_MOTORS 2
-#define STEPS_PER_MM 40
+#define STEPS_PER_MM 32
 
 #define DRIVER_ADDRESS     0b00        // TMC2209 Driver address
 #define R_SENSE            0.11f       // E_SENSE for current calc.  

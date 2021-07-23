@@ -1,11 +1,6 @@
 #include <Arduino.h>
 #include <robotControl.hpp>
 
-
-Move toTheRight;
-Move toTheLeft;
-Move nowKick;
-Move nowWalkItByYourself;
 RobotControl controller;
 
 volatile boolean complete;
@@ -31,21 +26,21 @@ void setup() {
     tmpDirs[0] = Clockwise; tmpDirs[1] = Clockwise;
     tmpSteps[0] = STEPS_PER_MM * MM_PER_SQUARE * 2; 
     tmpSteps[1] = STEPS_PER_MM * MM_PER_SQUARE * 2;
-    toTheRight.setDirs(tmpDirs);
-    toTheRight.setNumSteps(tmpSteps);
 
-    tmpDirs[0] = AntiClockwise; tmpDirs[1] = AntiClockwise;
-    toTheLeft.setDirs(tmpDirs);
-    toTheLeft.setNumSteps(tmpSteps);
+    Move right(tmpDirs, tmpSteps);
+    Move rightMagnetOn(tmpDirs, tmpSteps, true);
 
-    tmpDirs[1] = Clockwise;
+    tmpDirs[0] = AntiClockwise;
+    Move up(tmpDirs, tmpSteps);
+    Move upMagnetOn(tmpDirs, tmpSteps, true);
 
-    nowKick.setDirs(tmpDirs);
-    nowKick.setNumSteps(tmpSteps);
+    tmpDirs[1] = AntiClockwise;
+    Move left(tmpDirs, tmpSteps);
+    Move leftMagnetOn(tmpDirs, tmpSteps, true);
 
-    tmpDirs[0] = Clockwise; tmpDirs[1] = AntiClockwise;
-    nowWalkItByYourself.setDirs(tmpDirs);
-    nowWalkItByYourself.setNumSteps(tmpSteps);
+    tmpDirs[0] = Clockwise;
+    Move down(tmpDirs, tmpSteps);
+    Move downMagnetOn(tmpDirs, tmpSteps, true);
 
     Serial.println("Finished creating moves, initializing motors");
     delay(250);
@@ -55,21 +50,36 @@ void setup() {
     //SERIAL_PORT1.begin(115200, SERIAL_8N1, RXD1, TXD1);
     controller.initializeMotors();
 
-    Serial.println("Motors initialized, queueing moves");
+    Serial.println("==== Motors initialized, queueing moves ====");
     delay(250);
     
-    controller.queueMove(toTheRight);
+    controller.queueMove(right);
     Serial.print("QUEUED:   ");
-    toTheRight.printMove();
-    controller.queueMove(toTheLeft);
+    right.printMove();
+    controller.queueMove(upMagnetOn);
     Serial.print("QUEUED:   ");
-    toTheLeft.printMove();
-    controller.queueMove(nowKick);
+    upMagnetOn.printMove();
+    controller.queueMove(left);
     Serial.print("QUEUED:   ");
-    nowKick.printMove();
-    controller.queueMove(nowWalkItByYourself);
+    left.printMove();
+    controller.queueMove(downMagnetOn);
     Serial.print("QUEUED:   ");
-    nowWalkItByYourself.printMove();
+    downMagnetOn.printMove();
+
+    Serial.println();
+
+    controller.queueMove(rightMagnetOn);
+    Serial.print("QUEUED:   ");
+    rightMagnetOn.printMove();
+    controller.queueMove(up);
+    Serial.print("QUEUED:   ");
+    up.printMove();
+    controller.queueMove(leftMagnetOn);
+    Serial.print("QUEUED:   ");
+    leftMagnetOn.printMove();
+    controller.queueMove(down);
+    Serial.print("QUEUED:   ");
+    down.printMove();
 
     timerInit();
 }
@@ -92,13 +102,7 @@ void loop() {
             delay(250);
             timesComplete += 1;
         }
-
-        if (timesComplete == 10) {
-            delay(50000);
-        }
     }
-
-    
 }
 
 void timerInit() {
