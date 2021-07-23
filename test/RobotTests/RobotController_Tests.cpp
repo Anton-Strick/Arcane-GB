@@ -95,6 +95,7 @@ void loop() {
     delay(1500);
 
     if (loops >= 0) {
+
         UNITY_END();
     }
 

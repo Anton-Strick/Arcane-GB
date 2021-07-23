@@ -41,9 +41,11 @@ class RobotControl {
          * Dequeues the next move in the RobotController's queue
          * @return The Move just dequeued
          */
+
         Move dequeueMove() { return queue.deQueue(); } 
         void disableMagnet() { digitalWrite(MAGNET_PIN, HIGH); }
         void enableMagnet() { digitalWrite(MAGNET_PIN, LOW); }
+
         //------------------- Defined in RobotControl.cpp -------------------//
         void disableMotors();
         void enableMotors();
