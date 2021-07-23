@@ -86,6 +86,7 @@ void loop() {
             Serial.printf("\n\n");
             Serial.println("============== Loading Move... ==============\n");
             controller.getNextMove().printMove();
+            controller.queueMove(controller.getNextMove());
             controller.loadMove();
             Serial.printf("\n");
             delay(250);
