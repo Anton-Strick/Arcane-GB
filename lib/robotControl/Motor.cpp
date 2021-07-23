@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
 #include <TMCStepper.h>
+
+#include "config.hpp"
 #include "Motor.hpp"
 
 using namespace TMC2208_n;
@@ -54,7 +56,7 @@ void Motor::step()  {
         }
     } // End motor reached target
     else
-        this->isComplete = true;
+        isComplete = true;
 }
 
 uint32_t Motor::getStepsToGo() {
@@ -83,7 +85,7 @@ void Motor::setTarget(uint32_t t) {
 }
 
 void Motor::displayReport() {
-    Serial.printf("\n----Motor %d Report----\n", this->getID());
+    Serial.printf("\n----Motor %u Report----\n", getID());
     Serial.printf("StallGuard Sensor:  ");
     Serial.println(this->getSG(), DEC);
     Serial.printf("CS Actual:          ");
@@ -97,11 +99,6 @@ void Motor::displayReport() {
 
 }
 
-TMC2209Stepper createDriver(HardwareSerial serial, float RS, uint8_t addr) {
-    TMC2209Stepper tmp(&serial, RS, addr);
-    return tmp;
-}
-
 HardwareSerial getSerial(uint8_t s) {
     switch(s) {
         case 0 :
@@ -113,4 +110,19 @@ HardwareSerial getSerial(uint8_t s) {
         default :
             return Serial;
     }
+}
+
+Motor& Motor::operator= (const Motor& param) {
+    motorPosition = param.motorPosition;
+    targetPosition = param.targetPosition;
+
+    motorID = param.motorID;
+
+    diagPin = param.diagPin;
+    dirPin = param.dirPin;
+    stepPin = param.stepPin;
+
+    isComplete = param.isComplete;
+
+    return *this;
 }

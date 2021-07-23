@@ -32,14 +32,13 @@ enum Piece_Type {
 
 #define PIECE_NUMBER_MASK 0xb00001111
 
-
 class Piece {
     private:
         std::array<uint8_t, 2> position = { { 0, 0 } };
         uint8_t pieceID;
 
     public:
-        Piece(std::array<uint8_t, 2> p, uint8_t id);
+        
         //--------------------------- Get Methods ---------------------------//
         std::array<uint8_t, 2> getPosition() { return position; }
         uint8_t getID() { return pieceID; }
@@ -50,7 +49,8 @@ class Piece {
         void setID(uint8_t id) { pieceID = id; }
 
         //------------------- Defined in gameState.cpp ----------------------//
-        Piece(int* p, String n);
+        Piece(std::array<uint8_t, 2> p, uint8_t id);
+        Piece();
 };
 
 #endif

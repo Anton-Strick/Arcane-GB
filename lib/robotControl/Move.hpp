@@ -2,6 +2,9 @@
 #define MOVE_HPP
 
 #include <Arduino.h>
+
+#include <array>
+
 #include "config.hpp"
 
 /**
@@ -10,29 +13,32 @@
  */
 class Move {
     private :
-        Move* next;
-        uint8_t direction[NUM_MOTORS];
-        uint32_t numSteps[NUM_MOTORS];
+        std::array<uint8_t, NUM_MOTORS> dirs;
+        std::array<uint32_t, NUM_MOTORS> numSteps;
 
     public :
         Move(); // Default Constructor
-        Move(uint8_t d[NUM_MOTORS], uint32_t s[NUM_MOTORS]);
+        Move(std::array<uint8_t, NUM_MOTORS> d, std::array<uint32_t, NUM_MOTORS> s);
 
         //--------------------------- Get Methods ---------------------------//
 
-        Move* getNext() {return this->next; }
-        uint8_t* getDirs() { return this->direction; }
-        uint32_t* getSteps() {return this->numSteps; }
+        std::array<uint8_t, NUM_MOTORS> getDirs() { return dirs; }
+        std::array<uint32_t, NUM_MOTORS> getSteps() {return numSteps; }
 
         //--------------------------- Set Methods ---------------------------//
 
-        void setNext(Move* m) { this->next = m; }
+        void setDirs(std::array<uint8_t, NUM_MOTORS> d) { dirs = d; }
+        void setNumSteps(std::array<uint32_t, NUM_MOTORS> nS) { numSteps = nS; }
 
         //========================== Helper Methods =========================//
         
         void destroy();
 
         void printMove();
+
+        bool operator== (const Move& param);
+        bool operator!= (const Move& param);
+        Move& operator= (const Move& param);
 };
 
 #endif

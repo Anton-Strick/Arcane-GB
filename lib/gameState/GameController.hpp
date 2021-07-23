@@ -29,9 +29,11 @@ class GameController {
 
         //------------------ Defined in GameController.cpp ------------------//
         
+        GameController();
         uint8_t getTransposition(array<uint8_t, 2> position);
-        array<uint8_t, 2> parseMove(String);
+        void queueJsonMove(JsonMove jMove);
         boolean reportToServer(String message);
+        void initializePieces();
 };
 
 #endif

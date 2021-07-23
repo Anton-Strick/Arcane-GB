@@ -6,10 +6,9 @@
  * pointer points to itself - lending itself to be used as a head/tail
 */
 Move::Move() {
-    this->next = this;
     for (int i = 0; i < NUM_MOTORS; i++) {
-        this->direction[i] = Clockwise;
-        this->numSteps[i] = -1; //4294967295
+        dirs[i] = Clockwise;
+        numSteps[i] = -1; //uint = 4294967295
     }
 }
 
@@ -21,11 +20,10 @@ Move::Move() {
  * @param steps {uint32_t[NUM_MOTORS]} Contains the number of steps required 
  *                                     from each motor, respectively.
  */
-Move::Move(uint8_t dirs[NUM_MOTORS], uint32_t steps[NUM_MOTORS]) {
-    this->next = NULL;
+Move::Move(std::array<uint8_t, NUM_MOTORS> dir, std::array<uint32_t, NUM_MOTORS> steps) {
     for (int i = 0 ; i < NUM_MOTORS ; i++) {
-        this->direction[i] = dirs[i];
-        this->numSteps[i] = steps[i];
+        dirs[i] = dir[i];
+        numSteps[i] = steps[i];
     }
 }
 
@@ -33,9 +31,6 @@ Move::Move(uint8_t dirs[NUM_MOTORS], uint32_t steps[NUM_MOTORS]) {
  * Deallocates the memory assigned to the Move instance
  */ 
 void Move::destroy() {
-    delete this->direction;
-    delete this->next;
-    delete this->numSteps;
     delete this;
 }
 
@@ -45,6 +40,25 @@ void Move::destroy() {
  */
 void Move::printMove() {
     Serial.printf("M0 - %d, %d steps | M1 - %d, %d steps\n", 
-                   this->direction[0], this->numSteps[0],
-                   direction[1], numSteps[1]);
+                   dirs[0], numSteps[0],
+                   dirs[1], numSteps[1]);
+}
+
+bool Move::operator== (const Move& param) {
+    bool out = true;
+    out = out && (dirs == param.dirs);
+    out = out && (numSteps == param.numSteps);
+
+    return out;
+}
+
+bool Move::operator!= (const Move& param) {
+    return !(*this == param);
+}
+
+Move& Move::operator= (const Move& param) {
+    dirs = param.dirs;
+    numSteps = param.numSteps;
+
+    return *this;
 }

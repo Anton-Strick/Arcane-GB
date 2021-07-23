@@ -4,7 +4,7 @@
 #define CONFIG_HPP
 
 #define NUM_MOTORS 2
-#define STEPS_PER_MM 80
+#define STEPS_PER_MM 40
 
 #define DRIVER_ADDRESS     0b00        // TMC2209 Driver address
 #define R_SENSE            0.11f       // E_SENSE for current calc.  
@@ -31,12 +31,17 @@
 #define SERIAL_PORT1        Serial2
 
 //--------------------------------- Electromagnet Definition -------------------------//
-#define EM_LOGIC            23
+#define MAGNET_PIN          23         // Used to toggle the magnet relay
 
-
-#define MAGNET_PIN          14         // Used to toggle the magnet relay
-enum dir { AntiClockwise, Clockwise };
+enum dir { AntiClockwise = 0, Clockwise = 1 };
 
 void configPins();
+
+#define RST_BTN_PIN         0
+#define PAIR_BTN_PIN        35
+
+#define NUM_ROWS 12
+#define NUM_COLS 8
+#define MM_PER_SQUARE 37
 
 #endif

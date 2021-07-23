@@ -18,4 +18,6 @@ void configPins() {
     //------------------------- Misc Pins -------------------------//
 
     pinMode(MAGNET_PIN, OUTPUT);
+    pinMode(PAIR_BTN_PIN, INPUT);
+    pinMode(RST_BTN_PIN, INPUT);
 }
