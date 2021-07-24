@@ -60,7 +60,7 @@ void GameController::initializePieces() {
     uint8_t whiteIndex = 0;
     uint8_t blackIndex = 16;
 
-    uint8_t piece = Pawn; // can be incremented with += 16
+    uint8_t piece = uint8_t(Pawn); // can be incremented with += 16
 
     for (currCol = 0 ; currCol < NUM_ROWS ; currCol++, whiteIndex++, blackIndex++) {
         whiteID = White | piece | currCol;
@@ -74,38 +74,33 @@ void GameController::initializePieces() {
     }
 
     // Initialize Rooks, knights, and bishops. Piece enum increments by 16
-    piece = Rook;
+    piece = uint8_t(Rook);
     whiteTmpPos[0] = 2; // Shift Rows back 1
     blackTmpPos[0] = 9;
 
-    for (currCol = 0 ; currCol < 3 ; currCol++, ++whiteIndex, ++blackIndex, piece += 16) {
+    for (currCol = 0 ; currCol < 3 ; currCol++, piece += 16) {
         whiteID = White | piece | currCol;
         blackID = Black | piece | currCol;
 
         whiteTmpPos[1] = currCol;
         blackTmpPos[1] = currCol;
 
-        pieces[whiteIndex] = Piece(whiteTmpPos, whiteID);
-        pieces[blackIndex] = Piece(blackTmpPos, blackID);
+        pieces[++whiteIndex] = Piece(whiteTmpPos, whiteID);
+        pieces[++blackIndex] = Piece(blackTmpPos, blackID);
 
         //----------------- Instantiate the Other Twin -----------------//
-        whiteIndex++;
-        blackIndex++;
-
         whiteTmpPos[1] = NUM_ROWS - 1 - currCol;
         blackTmpPos[1] = whiteTmpPos[1];
 
         whiteID = White | piece | whiteTmpPos[1];
         blackID = Black | piece | blackTmpPos[1];
 
-        pieces[whiteIndex] = Piece(whiteTmpPos, whiteID);
-        pieces[blackIndex] = Piece(blackTmpPos, blackID);
+        pieces[++whiteIndex] = Piece(whiteTmpPos, whiteID);
+        pieces[++blackIndex] = Piece(blackTmpPos, blackID);
     }
 
     // Initialize Queens
-    piece = Queen;
-    whiteIndex++;
-    blackIndex++;
+    piece = uint8_t(Queen);
     currCol++;
 
     whiteID = White | piece | currCol;
@@ -114,13 +109,11 @@ void GameController::initializePieces() {
     whiteTmpPos[1] = currCol;
     blackTmpPos[1] = currCol;
 
-    pieces[whiteIndex] = Piece(whiteTmpPos, whiteID);
-    pieces[blackIndex] = Piece(blackTmpPos, blackID);
+    pieces[++whiteIndex] = Piece(whiteTmpPos, whiteID);
+    pieces[++blackIndex] = Piece(blackTmpPos, blackID);
 
     // Initialize Kings
-    piece = King;
-    whiteIndex++;
-    blackIndex++;
+    piece = uint8_t(King);
     currCol++;
 
     whiteID = White | piece | currCol;
@@ -129,6 +122,6 @@ void GameController::initializePieces() {
     whiteTmpPos[1] = currCol;
     blackTmpPos[1] = currCol;
 
-    pieces[whiteIndex] = Piece(whiteTmpPos, whiteID);
-    pieces[blackIndex] = Piece(blackTmpPos, blackID);
+    pieces[++whiteIndex] = Piece(whiteTmpPos, whiteID);
+    pieces[++blackIndex] = Piece(blackTmpPos, blackID);
 }

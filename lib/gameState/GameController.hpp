@@ -14,7 +14,6 @@ class GameController {
         uint8_t gameID;
         // TODO (low): Implement std::arrays throughout code
         array<Piece, NUM_PIECES> pieces;
-        WirelessController wireless;
 
     public:
         //--------------------------- Get Methods ---------------------------//
@@ -31,8 +30,6 @@ class GameController {
         
         GameController();
         uint8_t getTransposition(array<uint8_t, 2> position);
-        void queueJsonMove(JsonMove jMove);
-        boolean reportToServer(String message);
         void initializePieces();
 };
 
