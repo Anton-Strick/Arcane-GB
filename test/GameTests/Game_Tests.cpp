@@ -8,15 +8,6 @@
 #include "config.hpp"
 #include "Piece.hpp"
 #include "GameController.hpp"
-#include "WirelessController.hpp"
-#include "RobotControl.hpp"
-
-
-template <typename T>
-bool getValueFromString( const string & value, T & result) {
-    std::istringstream iss( value );
-    return !(iss >> result ).fail();
-}
 
 /**
  * Piece Class Tests
@@ -48,17 +39,23 @@ void test_Piece_Move(void) {
  * GameController Class Tests
  */
 void test_Controller_Construction(void) {
-    
+    GameController subject;
 }
 
 void test_Get_Transposition(void) {
 
 }
 
+void test_Plan_Path(void) {
+    
+}
+
 void setup() {
     UNITY_BEGIN();
     RUN_TEST(test_Piece_Construction);
     RUN_TEST(test_Piece_Move);
+    RUN_TEST(test_Controller_Construction);
+    RUN_TEST(test_Get_Transposition);
 }
 
 void loop() {
