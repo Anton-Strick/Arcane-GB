@@ -15,35 +15,32 @@ enum mode { Bluetooth, WIFI };
 
 using namespace std;
 
-const int jsonCapacity = JSON_OBJECT_SIZE(NUM_JSON_MEMBERS);
+const int jsonCapacity = 512;
 
 struct JsonMove {
-    uint8_t turn;
-    char specialFlag;
+    string specialFlag;
     array<uint8_t, 2> startPos, endPos;
 
     JsonMove() {
-        turn = 0;
-        specialFlag = 'n';
+        specialFlag = "n";
         startPos = { 0, 0 };
         endPos = { 0, 0 };
     }
 
     /**
      * Creates a new instance of the JsonMove data structure
-     * @param turn the current turn (increments after black)
      * @param flag can be n, b, e, or c
      * @param start an array with the initial coordinates (x, y)
      * @param end   an array with the terminal coordinates (x, y)
      */
-    JsonMove(uint8_t turn, char flag, 
-             array<uint8_t, 2> start, array<uint8_t, 2> end) {
-        turn = turn;
-        specialFlag = specialFlag;
+    JsonMove(string flag, array<uint8_t, 2> start, array<uint8_t, 2> end) {
+        specialFlag = flag;
         startPos = start;
         endPos = end;
     }
 };
+
+void printJsonMove(JsonMove m);
 
 class WirelessController {
     private : 
@@ -76,11 +73,15 @@ class WirelessController {
         
         boolean connectWiFi(String ssid, String password);
         boolean connectWiFi();
+
+        /**
+         * Takes a deserialized JSON file and loads it into a struct
+         * containing only unsigned integers and a char – saves space in the
+         * stack during runtime and avoids memory leaks. from JsonDocument
+         */
         JsonMove getMove(StaticJsonDocument<jsonCapacity> doc);
         std::array<uint8_t, 2> parseXNToArray(const char* xN);
         void setMode(uint8_t mode);
-        array<String, 2> getCredentials();
-        boolean sendReport();
 
         boolean socketConnect();
         void socketMessageRecieved(websockets::WebsocketsMessage message);

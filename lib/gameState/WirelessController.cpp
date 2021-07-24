@@ -45,16 +45,19 @@ boolean WirelessController::socketConnect() {
 }
 
 JsonMove WirelessController::getMove(StaticJsonDocument<jsonCapacity> doc) {
-    uint8_t turn;
-    char specialFlag;
+    string specialFlag;
     std::array<uint8_t, 2> start, end;
 
-    turn = doc["turn"].as<uint8_t>();
-    specialFlag = doc["flag"].as<char>();
-    start = parseXNToArray(doc["from"].as<const char*>());
-    end = parseXNToArray(doc["to"].as<const char*>());
+    try {
+        specialFlag = doc["flags"].as<string>();
+        start = parseXNToArray(doc["from"].as<const char*>());
+        end = parseXNToArray(doc["to"].as<const char*>());
+    } catch (...) {
+        Serial.println("ERROR:  COULD NOT getMove!");
+    }
     
-    return JsonMove(turn, specialFlag, start, end);
+    
+    return JsonMove(specialFlag, start, end);
 }
 
 std::array<uint8_t, 2> WirelessController::parseXNToArray(const char* xN) {
@@ -76,4 +79,12 @@ void WirelessController::socketMessageRecieved(websockets::WebsocketsMessage mes
     StaticJsonDocument<jsonCapacity> doc;
     DeserializationError err = deserializeJson(doc, message.data());
     newMove = getMove(doc);
+}
+
+void printJsonMove(JsonMove m) {
+    Serial.printf("--------- JSON Move ---------\n");
+    Serial.printf("Start:   %u, %u\n", m.startPos[0], m.startPos[1]);
+    Serial.printf("End:     %u, %u\n", m.endPos[0], m.endPos[1]);
+    Serial.printf("Special: %s", m.specialFlag.c_str());
+    Serial.println();
 }
