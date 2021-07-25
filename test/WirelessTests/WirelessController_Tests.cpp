@@ -4,22 +4,16 @@
 #include <ArduinoWebsockets.h>
 
 #include <array>
-#include <iostream>
-#include <sstream>
-#include <fstream>
 
 #include "WirelessController.hpp"
 #include "config.hpp"
 #include "RobotControl.hpp"
 
-String ssid = "The Pack Net";
-String password = "3a$tmarInternet11202";
-String url = "http://arduinojson.org/example.json";
-String wsURL = "ws://agbackend.herokuapp.com/";
+String ssid = "The Wifi";
+String password = "ThePassword";
+String url = "ws://example.com/websocket";
 
 void test_WiFi_Connect(void) {
-
-
     WirelessController subject(ssid, password, url);
 
     if (subject.connectWiFi())
@@ -116,8 +110,8 @@ void test_Get_Move(void) {
 void setup() {
     configPins(); // located in config
     UNITY_BEGIN();
-    //RUN_TEST(test_WiFi_Connect);
-    //RUN_TEST(test_Socket_Connect);
+    RUN_TEST(test_WiFi_Connect);
+    RUN_TEST(test_Socket_Connect);
     //RUN_TEST(test_Message_Recieved);
     RUN_TEST(test_Parse_XN_To_Array);
     RUN_TEST(test_Get_Move);

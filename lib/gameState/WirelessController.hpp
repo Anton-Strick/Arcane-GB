@@ -84,7 +84,7 @@ class WirelessController {
         void setMode(uint8_t mode);
 
         boolean socketConnect();
-        void socketMessageRecieved(websockets::WebsocketsMessage message);
+        static void socketMessageRecieved(websockets::WebsocketsMessage message);
 };
 
 #endif

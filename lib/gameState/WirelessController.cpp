@@ -5,17 +5,26 @@
 #include <array>
 
 #include "WirelessController.hpp"
+using namespace websockets;
 
 WirelessController::WirelessController(String s, String p, String u) {
     ssid = s;
     password = p;
     url = u;
     bluFiMode = WIFI;
-    //webSocket.onMessage(socketMessageRecieved);
+    webSocket.onMessage([&] (websockets::WebsocketsMessage message) {
+        StaticJsonDocument<jsonCapacity> doc;
+        DeserializationError err = deserializeJson(doc, message.data());
+        if (!err) {
+            
+        } 
+    });
 }
 
 WirelessController::WirelessController() {
-    
+    webSocket.onMessage([&] (websockets::WebsocketsMessage message) {
+
+    });
 }
 
 boolean WirelessController::connectWiFi(String ssid, String password) {
@@ -40,8 +49,8 @@ boolean WirelessController::connectWiFi() {
 
 boolean WirelessController::socketConnect() {
     if (WiFi.status() != WL_CONNECTED)
-        connectWiFi(ssid, password);
-    return webSocket.connect(url, 8080, "/");
+        return false;
+    return webSocket.connect(url, 8000, "/");
 }
 
 JsonMove WirelessController::getMove(StaticJsonDocument<jsonCapacity> doc) {
@@ -78,7 +87,9 @@ std::array<uint8_t, 2> WirelessController::parseXNToArray(const char* xN) {
 void WirelessController::socketMessageRecieved(websockets::WebsocketsMessage message) {
     StaticJsonDocument<jsonCapacity> doc;
     DeserializationError err = deserializeJson(doc, message.data());
-    newMove = getMove(doc);
+    if (!err) {
+
+    }
 }
 
 void printJsonMove(JsonMove m) {
