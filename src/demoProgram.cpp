@@ -21,7 +21,24 @@ void setup() {
     delay(5000);
     
     //------------------------------- Prepare Movements -------------------------------//
+    robot.queueMove(xyToMotors(5, -8));
+    robot.queueMove(xyToMotors(0, 2, true));
 
+    robot.queueMove(xyToMotors(4, -1));
+    robot.queueMove(xyToMotors(0, -1, true));
+
+    robot.queueMove(xyToMotors(0, -4));
+    robot.queueMove(xyToMotors(0, 2, true));
+
+    robot.queueMove(xyToMotors(3, 4));
+    robot.transpose(uint8_t(3));
+    robot.queueMove(xyToMotors(0, -1, true));
+    robot.transpose(uint8_t(3));
+
+    robot.queueMove(xyToMotors(-4, -5));
+    robot.transpose(uint8_t(0));
+    robot.queueMove(xyToMotors(0, 1));
+    
 }
 
 void loop() {
