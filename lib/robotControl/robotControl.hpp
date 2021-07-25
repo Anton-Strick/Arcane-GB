@@ -9,6 +9,7 @@
 #include <Queue.hpp>
 #include "config.hpp"
 
+using namespace std;
 
 /**
  * Primary high-level control class for the H-Bot.
@@ -20,7 +21,8 @@
 class RobotControl {
     private:
         Queue queue;
-        std::array<Motor *, NUM_MOTORS> motors;
+        array<Motor *, NUM_MOTORS> motors;
+        array<uint8_t, 2> currentPosition = { 0, NUM_ROWS };
         
     public:
         bool moveComplete = true;
@@ -28,15 +30,18 @@ class RobotControl {
         //--------------------------- Get Methods ---------------------------//
 
         Move getNextMove() { return queue.getNextMove(); }
+        array<uint8_t, 2> getCurrentPosition() { return currentPosition; }
 
         //--------------------------- Set Methods ---------------------------//
         
+        void setCurrentPosition(array<uint8_t, 2> pos) { currentPosition = pos; }
 
         //========================== Helper Methods =========================//
         /**
          * Places a Move in the queue of the RobotController
          */
         void queueMove(Move m) { queue.enQueue(m); }
+
         /**
          * Dequeues the next move in the RobotController's queue
          * @return The Move just dequeued
@@ -49,15 +54,14 @@ class RobotControl {
         //------------------- Defined in RobotControl.cpp -------------------//
         void disableMotors();
         void enableMotors();
-
         void initializeMotors();
-
         void stepMotors();
+
         void loadMove();
+        void queueMoves(Queue q);
+        static Move xyToMotors(int8_t dx, int8_t dy, bool mE = false);
 
         void printReport();
-        
-        Move xyToMotors(int8_t dx, int8_t dy);
 };
 
 #endif

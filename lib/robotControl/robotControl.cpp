@@ -59,7 +59,7 @@ void RobotControl::stepMotors() {
  * @return Move containing the direction and number of steps required
  *         to achieve the desired motion
  */
-Move RobotControl::xyToMotors(int8_t dX, int8_t dY) {
+Move RobotControl::xyToMotors(int8_t dX, int8_t dY, bool mE = false) {
     int32_t dA = (dX - dY) * STEPS_PER_MM * MM_PER_SQUARE;
     int32_t dB = (dX + dY) * STEPS_PER_MM * MM_PER_SQUARE;
 
@@ -71,7 +71,7 @@ Move RobotControl::xyToMotors(int8_t dX, int8_t dY) {
     steps[0] = (dA > 0) ? (uint32_t) dA : (uint32_t) (dA * -1);
     steps[1] = (dB > 0) ? (uint32_t) dB : (uint32_t) (dB * -1);
 
-    Move newMove(dirs, steps);
+    Move newMove(dirs, steps, mE);
     return newMove;
 }
 
@@ -105,4 +105,10 @@ void RobotControl::loadMove() {
     } // End has Moves
 
     // No action if ! has moves
+}
+
+void RobotControl::queueMoves(Queue q) {
+    while (q.hasMoves()) {
+        queue.enQueue(q.deQueue());
+    }
 }
