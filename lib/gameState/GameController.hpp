@@ -1,10 +1,8 @@
 #ifndef GAMECONTROLLER_HPP
 #define GAMECONTROLLER_HPP
 
-#include <Arduino.h>
 #include <array>
 #include "Piece.hpp"
-#include "WirelessController.hpp"
 
 #define NUM_PIECES 32
 
@@ -19,6 +17,7 @@ class GameController {
         //--------------------------- Get Methods ---------------------------//
 
         uint8_t getID() { return gameID; }
+        Piece getPiece(int index) { return pieces[index]; }
 
         //--------------------------- Set Methods ---------------------------//
 
@@ -30,6 +29,7 @@ class GameController {
         
         GameController();
         uint8_t getTransposition(array<uint8_t, 2> position);
+        uint8_t getTransposition(Piece p);
         void initializePieces();
 };
 

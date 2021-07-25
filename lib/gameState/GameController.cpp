@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <array>
 
 #include "config.hpp"
@@ -21,18 +20,22 @@ GameController::GameController() {
 uint8_t GameController::getTransposition(std::array<uint8_t, 2> position) {
     uint8_t indicator = 0;
     
-    if (position[0] >= 4)
-        indicator = indicator | 0xb01;  // Transpose Left
+    if (position[0] > 4)
+        indicator = indicator | 0b01;  // Transpose Left
 
-    else indicator = indicator | 0xb00; // Transpose Right
+    else indicator = indicator | 0b00; // Transpose Right
 
-    if (position[1] >= 4)
-        indicator = indicator | 0xb10;  // Transpose Down
+    if (position[1] > 5)
+        indicator = indicator | 0b10;  // Transpose Down
     
     else 
-        indicator = indicator | 0xb00;  // Transpose Up
+        indicator = indicator | 0b00;  // Transpose Up
 
     return indicator;
+}
+
+uint8_t GameController::getTransposition(Piece p) {
+    return getTransposition(p.getPosition());
 }
 
 void GameController::initializePieces() {
