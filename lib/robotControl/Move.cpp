@@ -80,3 +80,8 @@ Move& Move::operator= (const Move& param) {
 
     return *this;
 }
+
+void Move::halfSteps() {
+    for (uint32_t steps : numSteps)
+        steps /= 2;
+}

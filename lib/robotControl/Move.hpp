@@ -43,6 +43,8 @@ class Move {
         bool operator== (const Move& param);
         bool operator!= (const Move& param);
         Move& operator= (const Move& param);
+
+        void halfSteps();
 };
 
 #endif
