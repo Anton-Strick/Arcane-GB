@@ -90,15 +90,17 @@ void RobotControl::loadMove() {
         moveComplete = false;
         Move tmp = dequeueMove();
 
+        // Magnet disable or enable
+        if (tmp.getMagnetEnabled()) {
+            enableMagnet();
+        }
+
+        delay(250);
+
         // Motor direction and steps
         for (uint8_t i = 0 ; i < NUM_MOTORS ; i++) {
             motors[i]->setDir(tmp.getDirs()[i]);
             motors[i]->setTarget(tmp.getSteps()[i]);
-        }
-
-        // Magnet disable or enable
-        if (tmp.getMagnetEnabled()) {
-            enableMagnet();
         }
 
     } // End has Moves
