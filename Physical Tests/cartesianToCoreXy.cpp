@@ -25,25 +25,25 @@ void setup() {
     tmpSteps[0] = STEPS_PER_MM * MM_PER_SQUARE * 2; 
     tmpSteps[1] = STEPS_PER_MM * MM_PER_SQUARE * 2;
 
-    Move right = controller.xyToMotors(3, 0);
+    Move right = xyToMotors(3, 0);
     Move rightMagnetOn(tmpDirs, tmpSteps, true);
 
     tmpDirs[0] = AntiClockwise;
-    Move up = controller.xyToMotors(0, 3);
+    Move up = xyToMotors(0, 3);
     Move upMagnetOn(tmpDirs, tmpSteps, true);
 
     tmpDirs[1] = AntiClockwise;
-    Move left = controller.xyToMotors(-3, 0);
+    Move left = xyToMotors(-3, 0);
     Move leftMagnetOn(tmpDirs, tmpSteps, true);
 
     tmpDirs[0] = Clockwise;
-    Move down = controller.xyToMotors(0, -3);
+    Move down = xyToMotors(0, -3);
     Move downMagnetOn(tmpDirs, tmpSteps, true);
 
-    Move up_right = controller.xyToMotors(2, 2);
-    Move up_left = controller.xyToMotors(-2, 2);
-    Move down_right = controller.xyToMotors(2, -2);
-    Move down_left = controller.xyToMotors(-2, -2);
+    Move up_right = xyToMotors(2, 2);
+    Move up_left = xyToMotors(-2, 2);
+    Move down_right = xyToMotors(2, -2);
+    Move down_left = xyToMotors(-2, -2);
 
     Serial.println("Finished creating moves, initializing motors");
     delay(250);
