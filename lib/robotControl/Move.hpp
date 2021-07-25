@@ -32,6 +32,7 @@ class Move {
 
         void setDirs(std::array<uint8_t, NUM_MOTORS> d) { dirs = d; }
         void setNumSteps(std::array<uint32_t, NUM_MOTORS> nS) { numSteps = nS; }
+        void setMagnetEnabled(bool mE) { magnetEnabled = mE; }
 
         //========================== Helper Methods =========================//
         
