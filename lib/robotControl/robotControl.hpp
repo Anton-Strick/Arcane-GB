@@ -22,7 +22,7 @@ class RobotControl {
     private:
         Queue queue;
         array<Motor *, NUM_MOTORS> motors;
-        array<uint8_t, 2> currentPosition = { 0, NUM_ROWS };
+        array<uint8_t, 2> currentPosition;
         
     public:
         bool moveComplete = true;

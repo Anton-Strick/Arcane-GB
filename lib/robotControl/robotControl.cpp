@@ -6,7 +6,7 @@
  * "this.intializeMotors() in order to function properly."
  */
 RobotControl::RobotControl() {
-    
+    currentPosition = { 0, NUM_ROWS };
 }
 
 /**
@@ -59,7 +59,7 @@ void RobotControl::stepMotors() {
  * @return Move containing the direction and number of steps required
  *         to achieve the desired motion
  */
-Move RobotControl::xyToMotors(int8_t dX, int8_t dY, bool mE = false) {
+Move RobotControl::xyToMotors(int8_t dX, int8_t dY, bool mE /*= false*/) {
     int32_t dA = (dX - dY) * STEPS_PER_MM * MM_PER_SQUARE;
     int32_t dB = (dX + dY) * STEPS_PER_MM * MM_PER_SQUARE;
 
