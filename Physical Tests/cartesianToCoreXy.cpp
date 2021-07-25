@@ -4,14 +4,11 @@
 RobotControl controller;
 
 volatile boolean complete;
-volatile uint32_t steps[NUM_MOTORS] = {0, 0};
-
 volatile uint moveCounter = 0;
 hw_timer_t * timer = NULL;
 
 void IRAM_ATTR stepperISR();
 void timerInit();
-void displaySteps();
 
 void setup() {
     //------------------------------ Connect to Computer ------------------------------//
@@ -127,8 +124,4 @@ void timerInit() {
 
 void IRAM_ATTR stepperISR() {
         controller.stepMotors();
-}
-
-void displaySteps() {
-    Serial.printf("There are %d steps remaining.\n", steps[0]);
 }
