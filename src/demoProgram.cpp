@@ -38,11 +38,14 @@ void setup() {
     robot.queueMove(xyToMotors(-4, -5));
     robot.transpose(uint8_t(0));
     robot.queueMove(xyToMotors(0, 1));
-    
+
 }
 
 void loop() {
-
+    if (robot.moveComplete) {
+        delay(100);
+        robot.loadMove();
+    }
 }
 
 void timerInit() {
