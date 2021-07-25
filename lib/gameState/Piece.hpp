@@ -1,7 +1,6 @@
 #ifndef Piece_HPP
 #define Piece_HPP
 
-#include<Arduino.h>
 #include<array>
 /**
  * Piece IDs are stored in the form of 8-bit uints. See below:
@@ -14,23 +13,23 @@
  *                  PieceID 1-010-1000
  */
 
-#define PIECE_FACTION_MASK 0xb10000000
+#define PIECE_FACTION_MASK 0b10000000
 enum Faction {
-    White = 0xb00000000, 
-    Black = 0xb10000000
+    White = 0b00000000, 
+    Black = 0b10000000
 };
 
-#define PIECE_TYPE_MASK 0xb01110000
+#define PIECE_TYPE_MASK 0b01110000
 enum Piece_Type {
-    Pawn   = 0xb00000000,
-    Rook   = 0xb00010000,
-    Knight = 0xb00100000,
-    Bishop = 0xb00110000,
-    Queen  = 0xb01000000,
-    King   = 0xb01010000
+    Pawn   = 0b00000000,
+    Rook   = 0b00010000,
+    Knight = 0b00100000,
+    Bishop = 0b00110000,
+    Queen  = 0b01000000,
+    King   = 0b01010000
 };
 
-#define PIECE_NUMBER_MASK 0xb00001111
+#define PIECE_NUMBER_MASK 0b00001111
 
 class Piece {
     private:
