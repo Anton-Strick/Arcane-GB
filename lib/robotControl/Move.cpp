@@ -64,6 +64,7 @@ bool Move::operator== (const Move& param) {
     bool out = true;
     out = out && (dirs == param.dirs);
     out = out && (numSteps == param.numSteps);
+    out = out && (magnetEnabled == param.magnetEnabled);
 
     return out;
 }
@@ -75,6 +76,7 @@ bool Move::operator!= (const Move& param) {
 Move& Move::operator= (const Move& param) {
     dirs = param.dirs;
     numSteps = param.numSteps;
+    magnetEnabled = param.magnetEnabled;
 
     return *this;
 }
