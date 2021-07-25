@@ -28,9 +28,10 @@ class GameController {
         //------------------ Defined in GameController.cpp ------------------//
         
         GameController();
-        uint8_t getTransposition(array<uint8_t, 2> position);
-        uint8_t getTransposition(Piece p);
         void initializePieces();
 };
+
+uint8_t getTransposition(array<uint8_t, 2> position);
+uint8_t getTransposition(Piece p);
 
 #endif
