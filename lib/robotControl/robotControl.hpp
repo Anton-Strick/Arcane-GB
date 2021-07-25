@@ -57,11 +57,14 @@ class RobotControl {
         void initializeMotors();
         void stepMotors();
 
+        void transpose(uint8_t indicator);
+
         void loadMove();
         void queueMoves(Queue q);
-        static Move xyToMotors(int8_t dx, int8_t dy, bool mE = false);
 
         void printReport();
 };
+
+Move xyToMotors(int8_t dx, int8_t dy, bool mE = false);
 
 #endif
