@@ -14,7 +14,7 @@ void setup() {
     //------------------------------ Connect to Computer ------------------------------//
     Serial.begin(115200);
     Serial.println("Start");
-    delay(5000);
+    //delay(5000);
     controller.disableMagnet();
 
     //------------------------------- Prepare Movements -------------------------------//

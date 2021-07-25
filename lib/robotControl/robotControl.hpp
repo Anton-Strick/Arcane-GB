@@ -22,7 +22,7 @@ class RobotControl {
     private:
         Queue queue;
         array<Motor *, NUM_MOTORS> motors;
-        array<uint8_t, 2> currentPosition;
+        array<int8_t, 2> currentPosition;
         
     public:
         bool moveComplete = true;
@@ -30,11 +30,14 @@ class RobotControl {
         //--------------------------- Get Methods ---------------------------//
 
         Move getNextMove() { return queue.getNextMove(); }
-        array<uint8_t, 2> getCurrentPosition() { return currentPosition; }
+        Move getLastMove() { return queue.getTail(); }
+        array<int8_t, 2> getCurrentPosition() { return currentPosition; }
+
+        bool hasMoves() { return queue.hasMoves(); };
 
         //--------------------------- Set Methods ---------------------------//
         
-        void setCurrentPosition(array<uint8_t, 2> pos) { currentPosition = pos; }
+        void setCurrentPosition(array<int8_t, 2> pos) { currentPosition = pos; }
 
         //========================== Helper Methods =========================//
         /**
@@ -57,10 +60,13 @@ class RobotControl {
         void initializeMotors();
         void stepMotors();
 
-        void transpose(uint8_t indicator);
+        void transpose(uint8_t indicator, bool toJunction = false);
+        void home();
 
         void loadMove();
         void queueMoves(Queue q);
+
+        void changePosition(std::array<int8_t, 2> delta);
 
         void printReport();
 };

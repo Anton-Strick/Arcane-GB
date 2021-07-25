@@ -71,7 +71,9 @@ Move xyToMotors(int8_t dX, int8_t dY, bool mE /*= false*/) {
     steps[0] = (dA > 0) ? (uint32_t) dA : (uint32_t) (dA * -1);
     steps[1] = (dB > 0) ? (uint32_t) dB : (uint32_t) (dB * -1);
 
-    Move newMove(dirs, steps, mE);
+    std::array<int8_t, 2> d = {dX, dY};
+
+    Move newMove(dirs, steps, mE, d);
     return newMove;
 }
 
@@ -88,7 +90,10 @@ void RobotControl::loadMove() {
     disableMagnet();
     if (queue.hasMoves()) { // If has Moves
         moveComplete = false;
+        
         Move tmp = dequeueMove();
+
+        changePosition(tmp.getDelta());
 
         // Magnet disable or enable
         if (tmp.getMagnetEnabled()) {
@@ -107,20 +112,28 @@ void RobotControl::loadMove() {
     // No action if ! has moves
 }
 
+void RobotControl::changePosition(std::array<int8_t, 2> delta) {
+    currentPosition[0] += delta[0];
+    currentPosition[1] += delta[0];
+}
+
 void RobotControl::queueMoves(Queue q) {
     while (q.hasMoves()) {
         queue.enQueue(q.deQueue());
     }
 }
 
-void RobotControl::transpose(uint8_t indicator) {
+void RobotControl::transpose(uint8_t indicator, bool toJunction) {
     Move transpose;
     switch (indicator) {
         case 0 :
-            transpose = xyToMotors(1, 1, true);
-            transpose.halfSteps();
-            queue.enQueue(transpose);
-            break;
+            if (!toJunction) {
+                transpose = xyToMotors(1, 1, true);
+                transpose.halfSteps();
+                queue.enQueue(transpose);
+                break;
+            }
+            
 
         case 1 :
             transpose = xyToMotors(-1, 1, true);
@@ -140,4 +153,8 @@ void RobotControl::transpose(uint8_t indicator) {
             queue.enQueue(transpose);
             break;
     }
+}
+
+void RobotControl::home() {
+
 }

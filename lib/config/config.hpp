@@ -9,10 +9,10 @@
 #define R_SENSE            0.11f       // E_SENSE for current calc.  
 #define STALL_VALUE        2           // [0..255]
 
-#define STEP_BIT_POS        0          // Faster access to base position
+#define STEP_BIT_POS       0           // Faster access to base position
 
-#define STEPS_PER_MM 40
-#define MM_PER_SQUARE 37
+#define STEPS_PER_MM       39.6
+#define MM_PER_SQUARE      37.25
 
 enum dir { AntiClockwise = 1, Clockwise = 0 };
 

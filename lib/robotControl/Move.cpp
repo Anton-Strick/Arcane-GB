@@ -10,6 +10,8 @@ Move::Move() {
         dirs[i] = Clockwise;
         numSteps[i] = -1; //uint = 4294967295
     }
+
+    delta = {0, 0};
 }
 
 /**
@@ -25,6 +27,7 @@ Move::Move(std::array<uint8_t, NUM_MOTORS> dir, std::array<uint32_t, NUM_MOTORS>
         dirs[i] = dir[i];
         numSteps[i] = steps[i];
     }
+    delta = {0, 0};
 }
 
 /**
@@ -41,6 +44,18 @@ Move::Move(std::array<uint8_t, NUM_MOTORS> dir, std::array<uint32_t, NUM_MOTORS>
         numSteps[i] = steps[i];
     }
     magnetEnabled = magEnable;
+
+    delta = {0, 0};
+}
+
+Move::Move(std::array<uint8_t, NUM_MOTORS> dir, std::array<uint32_t, NUM_MOTORS> steps, bool magEnable, std::array<int8_t, 2> d) {
+    for (int i = 0 ; i < NUM_MOTORS ; i++) {
+        dirs[i] = dir[i];
+        numSteps[i] = steps[i];
+    }
+    magnetEnabled = magEnable;
+
+    delta = d;
 }
 
 /**
@@ -82,6 +97,6 @@ Move& Move::operator= (const Move& param) {
 }
 
 void Move::halfSteps() {
-    for (uint32_t steps : numSteps)
-        steps /= 2;
+    for (int i ; i < NUM_MOTORS ; i++)
+        numSteps[i] = numSteps[i] / 2;
 }
