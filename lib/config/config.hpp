@@ -33,7 +33,7 @@
 //--------------------------------- Electromagnet Definition -------------------------//
 #define MAGNET_PIN          23         // Used to toggle the magnet relay
 
-enum dir { AntiClockwise = 0, Clockwise = 1 };
+enum dir { AntiClockwise = 1, Clockwise = 0 };
 
 void configPins();
 

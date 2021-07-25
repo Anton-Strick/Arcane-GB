@@ -59,13 +59,13 @@ void RobotControl::stepMotors() {
  * @return Move containing the direction and number of steps required
  *         to achieve the desired motion
  */
-Move RobotControl::xyToMotors(int16_t dX, int16_t dY) {
-    int16_t dA = (0.5) * (dX + dY);
-    int16_t dB = (0.5) * (dX - dY);
+Move RobotControl::xyToMotors(int8_t dX, int8_t dY) {
+    int32_t dA = (dX - dY) * STEPS_PER_MM * MM_PER_SQUARE;
+    int32_t dB = (dX + dY) * STEPS_PER_MM * MM_PER_SQUARE;
 
     std::array<uint8_t, NUM_MOTORS> dirs;
-    dirs[0] = (dA > 0) ? AntiClockwise : Clockwise;
-    dirs[1] = (dB > 0) ? AntiClockwise : Clockwise;
+    dirs[0] = (dA < 0) ? AntiClockwise : Clockwise;
+    dirs[1] = (dB < 0) ? AntiClockwise : Clockwise;
 
     std::array<uint32_t, NUM_MOTORS> steps;
     steps[0] = (dA > 0) ? (uint32_t) dA : (uint32_t) (dA * -1);
@@ -102,7 +102,6 @@ void RobotControl::loadMove() {
             motors[i]->setDir(tmp.getDirs()[i]);
             motors[i]->setTarget(tmp.getSteps()[i]);
         }
-
     } // End has Moves
 
     // No action if ! has moves

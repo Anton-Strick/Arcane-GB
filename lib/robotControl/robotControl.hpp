@@ -57,7 +57,7 @@ class RobotControl {
 
         void printReport();
         
-        Move xyToMotors(int16_t dx, int16_t dy);
+        Move xyToMotors(int8_t dx, int8_t dy);
 };
 
 #endif
