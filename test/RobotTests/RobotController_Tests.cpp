@@ -68,7 +68,26 @@ void test_Disable_Magnet(void) {
 }
 
 void test_Step_Motors(void) {
-    
+    RobotControl subject;
+
+    std::array<uint8_t, 2> dirs { Clockwise, Clockwise };
+    std::array<uint32_t, 2> steps { 
+        2 * STEPS_PER_MM * MM_PER_SQUARE,
+        2 * STEPS_PER_MM * MM_PER_SQUARE 
+    };
+
+    Move right = subject.xyToMotors(2, 0);
+    Move expected();
+
+    Move up = subject.xyToMotors(0, 2);
+    Move left = subject.xyToMotors(-2, 0);
+    Move down = subject.xyToMotors(0, -2);
+    Move up_right = subject.xyToMotors(2, 2);
+    Move up_left = subject.xyToMotors(2, -2);
+    Move down_right = subject.xyToMotors(-2, 2);
+    Move down_left = subject.xyToMotors(-2, -2);
+
+
 }
 
 void setup() {
