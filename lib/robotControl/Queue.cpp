@@ -17,6 +17,12 @@ void Queue::enQueue(std::array<uint8_t, NUM_MOTORS> dirs, std::array<uint32_t, N
     enQueue(*newMove);
 }
 
+void Queue::enQueue(Queue q) {
+    while (q.hasMoves()) {
+        enQueue(q.deQueue());
+    }
+}
+
 Move Queue::deQueue() {
     Move out = stdQueue.front();
     stdQueue.pop();

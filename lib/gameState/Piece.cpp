@@ -11,3 +11,19 @@ Piece::Piece() {
     this->setPosition(tmpPosition);
     this->setID(0);
 }
+
+int8_t Piece::getRetireRow() {
+    if (this->getPieceColor() == White) {
+        if (this->getPieceType() != Pawn) {
+            return 0;
+        }
+        else return 1;
+    }
+
+    else {
+        if (this->getPieceType() != Pawn) {
+            return 11;
+        }
+        else return 10;
+    }
+}

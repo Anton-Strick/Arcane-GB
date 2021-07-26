@@ -48,7 +48,8 @@ class Piece {
         void setID(uint8_t id) { pieceID = id; }
 
         //========================== Helper Methods =========================//
-        int8_t getStartCol() { return int8_t(pieceID & PIECE_COL_MASK); }
+        int8_t getRetireCol() { return int8_t(pieceID & PIECE_COL_MASK); }
+        int8_t getRetireRow();
         uint8_t getPieceType() { return (pieceID & PIECE_TYPE_MASK); }
         uint8_t getPieceColor() { return (pieceID & PIECE_FACTION_MASK); }
 

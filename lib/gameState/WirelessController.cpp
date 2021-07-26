@@ -31,14 +31,22 @@ boolean WirelessController::connectWiFi(String ssid, String password) {
     const char* tmpSSID =  ssid.c_str();
     const char* tmpPass = password.c_str();
 
+    Serial.printf("\n======= Connecting to Wifi  =======\n");
+    Serial.print("SSID:      ");
+    Serial.println(ssid);
+    Serial.print("Password:  ");
+    Serial.println(password);
     WiFi.begin(tmpSSID, tmpPass);
 
     for (int i = 0 ; i < TIMEOUT || WiFi.status() != WL_CONNECTED ; i++) {
+        Serial.println("...");
         delay(250); // Waiting to connect
     }
 
-    if (WiFi.status() == WL_CONNECTED)
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.printf("Successfully connected!\n\n");
         return true;
+    }
 
     else return false;
 }

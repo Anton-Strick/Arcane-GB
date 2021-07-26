@@ -52,40 +52,6 @@ void RobotControl::stepMotors() {
     moveComplete = temp;
 }
 
-/**
- * Converts cartesian movement into coreXY movement
- * @param {int16_t} dX The number of steps in the X direction
- * @param {int16_t} dY The number of steps in the Y direction
- * @return Move containing the direction and number of steps required
- *         to achieve the desired motion
- */
-Move xyToMotors(int8_t dX, int8_t dY, bool mE /*= false*/) {
-    int32_t dA = (dX - dY) * STEPS_PER_MM * MM_PER_SQUARE;
-    int32_t dB = (dX + dY) * STEPS_PER_MM * MM_PER_SQUARE;
-
-    std::array<uint8_t, NUM_MOTORS> dirs;
-    dirs[0] = (dA < 0) ? AntiClockwise : Clockwise;
-    dirs[1] = (dB < 0) ? AntiClockwise : Clockwise;
-
-    std::array<uint32_t, NUM_MOTORS> steps;
-    steps[0] = (dA > 0) ? (uint32_t) dA : (uint32_t) (dA * -1);
-    steps[1] = (dB > 0) ? (uint32_t) dB : (uint32_t) (dB * -1);
-
-    std::array<int8_t, 2> d = {dX, dY};
-
-    Move newMove(dirs, steps, mE, d);
-    return newMove;
-}
-
-void RobotControl::printReport() {
-    Serial.println("========== R-Control Report ===========");
-    Serial.printf("Number of Moves in Queue:  %d", queue.getSize());
-    motors[0]->displayReport();
-    motors[1]->displayReport();
-    Serial.printf("\nNext Move:     ");
-    queue.getTail().printMove();
-}
-
 void RobotControl::loadMove() {
     disableMagnet();
     if (queue.hasMoves()) { // If has Moves
@@ -123,38 +89,15 @@ void RobotControl::queueMoves(Queue q) {
     }
 }
 
-void RobotControl::transpose(uint8_t indicator, bool toJunction) {
-    Move transpose;
-    switch (indicator) {
-        case 0 :
-            if (!toJunction) {
-                transpose = xyToMotors(1, 1, true);
-                transpose.halfSteps();
-                queue.enQueue(transpose);
-                break;
-            }
-            
-
-        case 1 :
-            transpose = xyToMotors(-1, 1, true);
-            transpose.halfSteps();
-            queue.enQueue(transpose);
-            break;
-
-        case 2 :
-            transpose = xyToMotors(1, -1, true);
-            transpose.halfSteps();
-            queue.enQueue(transpose);
-            break;
-
-        case 3 : 
-            transpose = xyToMotors(-1, -1, true);
-            transpose.halfSteps();
-            queue.enQueue(transpose);
-            break;
-    }
-}
-
 void RobotControl::home() {
 
+}
+
+void RobotControl::printReport() {
+    Serial.println("========== R-Control Report ===========");
+    Serial.printf("Number of Moves in Queue:  %d", queue.getSize());
+    motors[0]->displayReport();
+    motors[1]->displayReport();
+    Serial.printf("\nNext Move:     ");
+    queue.getTail().printMove();
 }

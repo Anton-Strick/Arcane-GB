@@ -71,6 +71,4 @@ class RobotControl {
         void printReport();
 };
 
-Move xyToMotors(int8_t dx, int8_t dy, bool mE = false);
-
 #endif

@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef GAMECONTROLLER_HPP
 #define GAMECONTROLLER_HPP
 
@@ -7,17 +9,19 @@
 
 #define NUM_PIECES 32
 
-using namespace std;
 class GameController {
     private:
         uint8_t gameID;
-        array<Piece, NUM_PIECES> pieces;
+        std::array<Piece, NUM_PIECES> pieces;
+        std::array<int8_t, 2> robotPosition;
+        Queue gameQueue;
 
     public:
         //--------------------------- Get Methods ---------------------------//
 
         uint8_t getID() { return gameID; }
         Piece getPiece(int index) { return pieces[index]; }
+        Queue getGameQueue() { return gameQueue; }
 
         //--------------------------- Set Methods ---------------------------//
 
@@ -29,18 +33,20 @@ class GameController {
         GameController();
 
         void initializePieces();
+        int8_t pieceAt(std::array<int8_t, 2> pos);
+        void insertPiece(int8_t i, Piece p);
 
-        Piece pieceAt(array<int8_t, 2> pos);
+        void movePieceAtPos(std::array<int8_t, 2> start, std::array<int8_t, 2> end );
+
+        void movePieceToPosition(Piece p, std::array<int8_t, 2> pos);
+        void moveKnightToPosition(Piece p, std::array<int8_t, 2> pos);
+        void retire(Piece p);
+        void retirePieceAt(std::array<int8_t, 2> pos);
 };
 
-Move transpose(array<int8_t, 2> position, bool deTranspose = false);
+Move xyToMotors(double dx, double dy, bool mE = false);
+
+Move transpose(std::array<int8_t, 2> position, bool deTranspose = false);
 Move transpose(Piece p, bool deTranspose = false);
-
-Move deTranspose(array<int8_t, 2> position) 
-    { return transpose(position, true); }
-Move deTranspose(Piece p) 
-    { return transpose(p, true); }
-
-Queue retire(Piece p);
 
 #endif

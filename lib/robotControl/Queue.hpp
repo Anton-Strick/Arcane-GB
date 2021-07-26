@@ -29,6 +29,7 @@ class Queue {
         //========================== Helper Methods =========================//
         void enQueue(Move m) { stdQueue.push(m); }
         void enQueue(std::array<uint8_t, NUM_MOTORS> dirs, std::array<uint32_t, NUM_MOTORS> steps);
+        void enQueue(Queue q);
         Move deQueue();
 };
 
