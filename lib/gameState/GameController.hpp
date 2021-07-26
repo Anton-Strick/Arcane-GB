@@ -3,6 +3,7 @@
 
 #include <array>
 #include "Piece.hpp"
+#include "Queue.hpp"
 
 #define NUM_PIECES 32
 
@@ -10,7 +11,6 @@ using namespace std;
 class GameController {
     private:
         uint8_t gameID;
-        // TODO (low): Implement std::arrays throughout code
         array<Piece, NUM_PIECES> pieces;
 
     public:
@@ -26,12 +26,21 @@ class GameController {
         //========================== Helper Methods =========================//
 
         //------------------ Defined in GameController.cpp ------------------//
-        
         GameController();
+
         void initializePieces();
+
+        Piece pieceAt(array<int8_t, 2> pos);
 };
 
-uint8_t getTransposition(array<uint8_t, 2> position);
-uint8_t getTransposition(Piece p);
+Move transpose(array<int8_t, 2> position, bool deTranspose = false);
+Move transpose(Piece p, bool deTranspose = false);
+
+Move deTranspose(array<int8_t, 2> position) 
+    { return transpose(position, true); }
+Move deTranspose(Piece p) 
+    { return transpose(p, true); }
+
+Queue retire(Piece p);
 
 #endif

@@ -17,25 +17,53 @@ GameController::GameController() {
  * @param position An int array of size 2 which contains the starting
  *                 position of a piece. [x,y]
  */
-uint8_t getTransposition(std::array<uint8_t, 2> position) {
-    uint8_t indicator = 0;
+Move transpose(std::array<int8_t, 2> position, bool deTranspose) {
+    int8_t dX, dY;
     
     if (position[0] > 4)
-        indicator = indicator | 0b01;  // Transpose Left
+        dX = int8_t(-1);  // Transpose Left
 
-    else indicator = indicator | 0b00; // Transpose Right
+    else dX = int8_t(1); // Transpose Right
 
     if (position[1] > 5)
-        indicator = indicator | 0b10;  // Transpose Down
+        dY = int8_t(-1);  // Transpose Down
     
-    else 
-        indicator = indicator | 0b00;  // Transpose Up
+    else dY = int8_t(1);  // Transpose Up
 
-    return indicator;
+    int32_t dA = ((dX - dY) * STEPS_PER_MM * MM_PER_SQUARE) / 2;
+    int32_t dB = ((dX + dY) * STEPS_PER_MM * MM_PER_SQUARE) / 2;
+
+    std::array<uint8_t, NUM_MOTORS> dirs;
+    dirs[0] = (dA < 0) ? AntiClockwise : Clockwise;
+    dirs[1] = (dB < 0) ? AntiClockwise : Clockwise;
+
+    std::array<uint32_t, NUM_MOTORS> steps;
+    steps[0] = (dA > 0) ? (uint32_t) dA : (uint32_t) (dA * -1);
+    steps[1] = (dB > 0) ? (uint32_t) dB : (uint32_t) (dB * -1);
+
+    Move out(dirs, steps, true);
 }
 
-uint8_t getTransposition(Piece p) {
-    return getTransposition(p.getPosition());
+Move transpose(Piece p, bool deTranspose) {
+    return transpose(p.getPosition());
+}
+
+Queue retire(Piece p) {
+    Queue retirePath; // Output
+    //---------------------- Transposing Piece------------------//
+    retirePath.enQueue(transpose(p));
+
+    //------------------ Move to Correct Column ----------------//
+    
+    //-------------------- Move to Correct Row -----------------//
+
+    //---------------------- Detranspose Piece -----------------//
+
+    return retirePath;
+}
+
+Piece GameController::pieceAt(std::array<int8_t, 2> pos) {
+    
 }
 
 void GameController::initializePieces() {
@@ -52,8 +80,8 @@ void GameController::initializePieces() {
      * White Index + 16
      */
     // Initialize Pawns
-    std::array<uint8_t, 2> whiteTmpPos = { 3, 0 };
-    std::array<uint8_t, 2> blackTmpPos = { 8, 0 };
+    std::array<int8_t, 2> whiteTmpPos = { 3, 0 };
+    std::array<int8_t, 2> blackTmpPos = { 8, 0 };
     
     uint8_t whiteID;
     uint8_t blackID;

@@ -29,26 +29,31 @@ enum Piece_Type {
     King   = 0b01010000
 };
 
-#define PIECE_NUMBER_MASK 0b00001111
+#define PIECE_COL_MASK 0b00001111
 
 class Piece {
     private:
-        std::array<uint8_t, 2> position = { { 0, 0 } };
+        std::array<int8_t, 2> position = { { 0, 0 } };
         uint8_t pieceID;
 
     public:
         
         //--------------------------- Get Methods ---------------------------//
-        std::array<uint8_t, 2> getPosition() { return position; }
+        std::array<int8_t, 2> getPosition() { return position; }
         uint8_t getID() { return pieceID; }
 
         //-------------------------- Set Functions --------------------------//
-        void setPosition(std::array<uint8_t, 2> p) { position[0] = p[0]; 
+        void setPosition(std::array<int8_t, 2> p) { position[0] = p[0]; 
                                                      position[1] = p[1]; }
         void setID(uint8_t id) { pieceID = id; }
 
+        //========================== Helper Methods =========================//
+        int8_t getStartCol() { return int8_t(pieceID & PIECE_COL_MASK); }
+        uint8_t getPieceType() { return (pieceID & PIECE_TYPE_MASK); }
+        uint8_t getPieceColor() { return (pieceID & PIECE_FACTION_MASK); }
+
         //------------------- Defined in gameState.cpp ----------------------//
-        Piece(std::array<uint8_t, 2> p, uint8_t id);
+        Piece(std::array<int8_t, 2> p, uint8_t id);
         Piece();
 };
 
