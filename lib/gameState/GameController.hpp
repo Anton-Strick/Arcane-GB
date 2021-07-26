@@ -1,25 +1,27 @@
+#pragma once
+
 #ifndef GAMECONTROLLER_HPP
 #define GAMECONTROLLER_HPP
 
-#include <Arduino.h>
 #include <array>
 #include "Piece.hpp"
-#include "WirelessController.hpp"
+#include "Queue.hpp"
 
 #define NUM_PIECES 32
 
-using namespace std;
 class GameController {
     private:
         uint8_t gameID;
-        // TODO (low): Implement std::arrays throughout code
-        array<Piece, NUM_PIECES> pieces;
-        WirelessController wireless;
+        std::array<Piece, NUM_PIECES> pieces;
+        std::array<int8_t, 2> robotPosition;
+        Queue gameQueue;
 
     public:
         //--------------------------- Get Methods ---------------------------//
 
         uint8_t getID() { return gameID; }
+        Piece getPiece(int index) { return pieces[index]; }
+        Queue getGameQueue() { return gameQueue; }
 
         //--------------------------- Set Methods ---------------------------//
 
@@ -28,12 +30,23 @@ class GameController {
         //========================== Helper Methods =========================//
 
         //------------------ Defined in GameController.cpp ------------------//
-        
         GameController();
-        uint8_t getTransposition(array<uint8_t, 2> position);
-        void queueJsonMove(JsonMove jMove);
-        boolean reportToServer(String message);
+
         void initializePieces();
+        int8_t pieceAt(std::array<int8_t, 2> pos);
+        void insertPiece(int8_t i, Piece p);
+
+        void movePieceAtPos(std::array<int8_t, 2> start, std::array<int8_t, 2> end );
+
+        void movePieceToPosition(Piece p, std::array<int8_t, 2> pos);
+        void moveKnightToPosition(Piece p, std::array<int8_t, 2> pos);
+        void retire(Piece p);
+        void retirePieceAt(std::array<int8_t, 2> pos);
 };
+
+Move xyToMotors(double dx, double dy, bool mE = false);
+
+Move transpose(std::array<int8_t, 2> position, bool deTranspose = false);
+Move transpose(Piece p, bool deTranspose = false);
 
 #endif

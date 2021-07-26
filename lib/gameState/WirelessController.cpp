@@ -5,31 +5,48 @@
 #include <array>
 
 #include "WirelessController.hpp"
+using namespace websockets;
 
 WirelessController::WirelessController(String s, String p, String u) {
     ssid = s;
     password = p;
     url = u;
     bluFiMode = WIFI;
-    //webSocket.onMessage(socketMessageRecieved);
+    webSocket.onMessage([&] (websockets::WebsocketsMessage message) {
+        StaticJsonDocument<jsonCapacity> doc;
+        DeserializationError err = deserializeJson(doc, message.data());
+        if (!err) {
+            
+        } 
+    });
 }
 
 WirelessController::WirelessController() {
-    
+    webSocket.onMessage([&] (websockets::WebsocketsMessage message) {
+
+    });
 }
 
 boolean WirelessController::connectWiFi(String ssid, String password) {
     const char* tmpSSID =  ssid.c_str();
     const char* tmpPass = password.c_str();
 
+    Serial.printf("\n======= Connecting to Wifi  =======\n");
+    Serial.print("SSID:      ");
+    Serial.println(ssid);
+    Serial.print("Password:  ");
+    Serial.println(password);
     WiFi.begin(tmpSSID, tmpPass);
 
     for (int i = 0 ; i < TIMEOUT || WiFi.status() != WL_CONNECTED ; i++) {
+        Serial.println("...");
         delay(250); // Waiting to connect
     }
 
-    if (WiFi.status() == WL_CONNECTED)
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.printf("Successfully connected!\n\n");
         return true;
+    }
 
     else return false;
 }
@@ -40,21 +57,24 @@ boolean WirelessController::connectWiFi() {
 
 boolean WirelessController::socketConnect() {
     if (WiFi.status() != WL_CONNECTED)
-        connectWiFi(ssid, password);
-    return webSocket.connect(url, 8080, "/");
+        return false;
+    return webSocket.connect(url, 8000, "/");
 }
 
 JsonMove WirelessController::getMove(StaticJsonDocument<jsonCapacity> doc) {
-    uint8_t turn;
-    char specialFlag;
+    string specialFlag;
     std::array<uint8_t, 2> start, end;
 
-    turn = doc["turn"].as<uint8_t>();
-    specialFlag = doc["flag"].as<char>();
-    start = parseXNToArray(doc["from"].as<const char*>());
-    end = parseXNToArray(doc["to"].as<const char*>());
+    try {
+        specialFlag = doc["flags"].as<string>();
+        start = parseXNToArray(doc["from"].as<const char*>());
+        end = parseXNToArray(doc["to"].as<const char*>());
+    } catch (...) {
+        Serial.println("ERROR:  COULD NOT getMove!");
+    }
     
-    return JsonMove(turn, specialFlag, start, end);
+    
+    return JsonMove(specialFlag, start, end);
 }
 
 std::array<uint8_t, 2> WirelessController::parseXNToArray(const char* xN) {
@@ -75,5 +95,15 @@ std::array<uint8_t, 2> WirelessController::parseXNToArray(const char* xN) {
 void WirelessController::socketMessageRecieved(websockets::WebsocketsMessage message) {
     StaticJsonDocument<jsonCapacity> doc;
     DeserializationError err = deserializeJson(doc, message.data());
-    newMove = getMove(doc);
+    if (!err) {
+
+    }
+}
+
+void printJsonMove(JsonMove m) {
+    Serial.printf("--------- JSON Move ---------\n");
+    Serial.printf("Start:   %u, %u\n", m.startPos[0], m.startPos[1]);
+    Serial.printf("End:     %u, %u\n", m.endPos[0], m.endPos[1]);
+    Serial.printf("Special: %s", m.specialFlag.c_str());
+    Serial.println();
 }

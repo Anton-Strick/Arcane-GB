@@ -4,13 +4,17 @@
 #define CONFIG_HPP
 
 #define NUM_MOTORS 2
-#define STEPS_PER_MM 40
 
 #define DRIVER_ADDRESS     0b00        // TMC2209 Driver address
 #define R_SENSE            0.11f       // E_SENSE for current calc.  
 #define STALL_VALUE        2           // [0..255]
 
-#define STEP_BIT_POS        0          // Faster access to base position
+#define STEP_BIT_POS       0           // Faster access to base position
+
+#define STEPS_PER_MM       39.6
+#define MM_PER_SQUARE      37.25
+
+enum dir { AntiClockwise = 1, Clockwise = 0 };
 
 // --------------------------------- Motor 0 Definition ---------------------------------
 #define EN_PIN0             18         // Enable
@@ -33,8 +37,6 @@
 //--------------------------------- Electromagnet Definition -------------------------//
 #define MAGNET_PIN          23         // Used to toggle the magnet relay
 
-enum dir { AntiClockwise = 0, Clockwise = 1 };
-
 void configPins();
 
 #define RST_BTN_PIN         0
@@ -42,6 +44,5 @@ void configPins();
 
 #define NUM_ROWS 12
 #define NUM_COLS 8
-#define MM_PER_SQUARE 37
 
 #endif

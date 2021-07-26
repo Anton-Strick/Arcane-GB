@@ -6,7 +6,7 @@
  * "this.intializeMotors() in order to function properly."
  */
 RobotControl::RobotControl() {
-    
+    currentPosition = { 0, (NUM_ROWS - 1) };
 }
 
 /**
@@ -52,27 +52,45 @@ void RobotControl::stepMotors() {
     moveComplete = temp;
 }
 
-/**
- * Converts cartesian movement into coreXY movement
- * @param {int16_t} dX The number of steps in the X direction
- * @param {int16_t} dY The number of steps in the Y direction
- * @return Move containing the direction and number of steps required
- *         to achieve the desired motion
- */
-Move RobotControl::xyToMotors(int16_t dX, int16_t dY) {
-    int16_t dA = (0.5) * (dX + dY);
-    int16_t dB = (0.5) * (dX - dY);
+void RobotControl::loadMove() {
+    disableMagnet();
+    if (queue.hasMoves()) { // If has Moves
+        moveComplete = false;
+        
+        Move tmp = dequeueMove();
 
-    std::array<uint8_t, NUM_MOTORS> dirs;
-    dirs[0] = (dA > 0) ? AntiClockwise : Clockwise;
-    dirs[1] = (dB > 0) ? AntiClockwise : Clockwise;
+        changePosition(tmp.getDelta());
 
-    std::array<uint32_t, NUM_MOTORS> steps;
-    steps[0] = (dA > 0) ? (uint32_t) dA : (uint32_t) (dA * -1);
-    steps[1] = (dB > 0) ? (uint32_t) dB : (uint32_t) (dB * -1);
+        // Magnet disable or enable
+        if (tmp.getMagnetEnabled()) {
+            enableMagnet();
+        }
 
-    Move newMove(dirs, steps);
-    return newMove;
+        delay(250);
+
+        // Motor direction and steps
+        for (uint8_t i = 0 ; i < NUM_MOTORS ; i++) {
+            motors[i]->setDir(tmp.getDirs()[i]);
+            motors[i]->setTarget(tmp.getSteps()[i]);
+        }
+    } // End has Moves
+
+    // No action if ! has moves
+}
+
+void RobotControl::changePosition(std::array<int8_t, 2> delta) {
+    currentPosition[0] += delta[0];
+    currentPosition[1] += delta[0];
+}
+
+void RobotControl::queueMoves(Queue q) {
+    while (q.hasMoves()) {
+        queue.enQueue(q.deQueue());
+    }
+}
+
+void RobotControl::home() {
+
 }
 
 void RobotControl::printReport() {
@@ -82,18 +100,4 @@ void RobotControl::printReport() {
     motors[1]->displayReport();
     Serial.printf("\nNext Move:     ");
     queue.getTail().printMove();
-}
-
-void RobotControl::loadMove() {
-    if (queue.hasMoves()) { // If has Moves
-        moveComplete = false;
-        Move tmp = dequeueMove();
-
-        for (uint8_t i = 0 ; i < NUM_MOTORS ; i++) {
-            motors[i]->setDir(tmp.getDirs()[i]);
-            motors[i]->setTarget(tmp.getSteps()[i]);
-        }
-    } // End has Moves
-
-    // No action if ! has moves
 }

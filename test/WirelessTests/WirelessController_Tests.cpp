@@ -4,21 +4,16 @@
 #include <ArduinoWebsockets.h>
 
 #include <array>
-#include <iostream>
-#include <sstream>
-#include <fstream>
 
 #include "WirelessController.hpp"
 #include "config.hpp"
 #include "RobotControl.hpp"
 
-String ssid = "The Pack Net";
-String password = "3a$tmarInternet11202";
-String url = "http://arduinojson.org/example.json";
+String ssid = "The Wifi";
+String password = "ThePassword";
+String url = "ws://example.com/websocket";
 
 void test_WiFi_Connect(void) {
-
-
     WirelessController subject(ssid, password, url);
 
     if (subject.connectWiFi())
@@ -80,13 +75,13 @@ void test_Parse_XN_To_Array(void) {
 
 void test_Get_Move(void) {
     String json = 
-        "{\"turn\":0,"
-        "\"piece\":168,"
+        "{\"color\":\"w\","
+        "\"piece\":\"r\","
         "\"from\":\"a1\","
         "\"to\":\"a4\","
-        "\"special\":\"n\"}";
+        "\"flags\":\"n\"}";
     
-    StaticJsonDocument<jsonCapacity> doc;
+    StaticJsonDocument<258> doc;
     DeserializationError err = deserializeJson(doc, json);
     if (err)
         TEST_FAIL_MESSAGE("ERROR DESERIALIZING JSON FILE");
@@ -95,14 +90,11 @@ void test_Get_Move(void) {
         WirelessController subject(ssid, password, url);
         JsonMove test = subject.getMove(doc);
         std::array<uint8_t, 2> start, end;
-        start = { 0, 0 };
-        end   = { 0, 3 };
-        JsonMove expected(0, 'n', start, end);
+        start = { 2, 0 };
+        end   = { 2, 3 };
+        JsonMove expected("n", start, end);
 
-        if (expected.turn != test.turn)
-            TEST_FAIL_MESSAGE("ERROR:  INCORRECT TURN NUMBER");
-
-        else if (expected.specialFlag != test.specialFlag)
+        if (expected.specialFlag.compare(test.specialFlag) != 0)
             TEST_FAIL_MESSAGE("ERROR:  INCORRECT SPECIAL FLAG");
 
         else if (expected.startPos != test.startPos)
@@ -118,8 +110,8 @@ void test_Get_Move(void) {
 void setup() {
     configPins(); // located in config
     UNITY_BEGIN();
-    //RUN_TEST(test_WiFi_Connect);
-    //RUN_TEST(test_Socket_Connect);
+    RUN_TEST(test_WiFi_Connect);
+    RUN_TEST(test_Socket_Connect);
     //RUN_TEST(test_Message_Recieved);
     RUN_TEST(test_Parse_XN_To_Array);
     RUN_TEST(test_Get_Move);
