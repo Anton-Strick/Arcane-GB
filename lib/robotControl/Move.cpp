@@ -98,5 +98,5 @@ Move& Move::operator= (const Move& param) {
 
 void Move::halfSteps() {
     for (int i ; i < NUM_MOTORS ; i++)
-        numSteps[i] = numSteps[i] / 2;
+        numSteps[i] = uint32_t((numSteps[i] / 2) * 1.4142);
 }
