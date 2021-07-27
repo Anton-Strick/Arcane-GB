@@ -20,7 +20,7 @@ const int jsonCapacity = 512;
 
 struct JsonMove {
     string specialFlag;
-    array<uint8_t, 2> startPos, endPos;
+    array<int8_t, 2> startPos, endPos;
 
     JsonMove() {
         specialFlag = "n";
@@ -34,7 +34,7 @@ struct JsonMove {
      * @param start an array with the initial coordinates (x, y)
      * @param end   an array with the terminal coordinates (x, y)
      */
-    JsonMove(string flag, array<uint8_t, 2> start, array<uint8_t, 2> end) {
+    JsonMove(string flag, array<int8_t, 2> start, array<int8_t, 2> end) {
         specialFlag = flag;
         startPos = start;
         endPos = end;
