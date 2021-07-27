@@ -1,4 +1,5 @@
 #include <array>
+#include "config.hpp"
 #include "Piece.hpp"
 
 Piece::Piece(std::array<int8_t, 2> p, uint8_t id) {
@@ -22,8 +23,8 @@ int8_t Piece::getRetireRow() {
 
     else {
         if (this->getPieceType() != Pawn) {
-            return 11;
+            return NUM_ROWS - 1;
         }
-        else return 10;
+        else return NUM_ROWS - 2;
     }
 }
