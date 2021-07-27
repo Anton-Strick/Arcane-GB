@@ -122,6 +122,11 @@ void GameController::moveKnightToPosition(Piece p, std::array<int8_t, 2> pos) {
     gameQueue.enQueue(path);
 }
 
+/**
+ * Moves a piece at a given start position to the end position.
+ * @param start a valid coordinate location (x, y)
+ * @param end   a valid coordinate location (x, y)
+ */
 void GameController::movePieceAtPos(std::array<int8_t, 2> start, std::array<int8_t, 2> end) {
     int8_t pieceIndex = pieceAt(start);
     if (pieceIndex >= 0) {
@@ -151,6 +156,11 @@ int8_t GameController::pieceAt(std::array<int8_t, 2> pos) {
     return int8_t(-1);
 }
 
+/**
+ * Queues the given JsonMove into the game controller, if needed
+ * a retirement function is called.
+ * @param jMove A valid JsonMove with a piece's start and end position
+ */
 void GameController::queueJsonMove(JsonMove jMove) {
     if (jMove.specialFlag.compare("c")) {
         retirePieceAt(jMove.endPos);
