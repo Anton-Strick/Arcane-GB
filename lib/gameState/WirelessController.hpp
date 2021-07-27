@@ -84,7 +84,7 @@ class WirelessController {
          * stack during runtime and avoids memory leaks. from JsonDocument
          */
         void queueJsonMove(StaticJsonDocument<jsonCapacity> doc);
-        std::array<uint8_t, 2> parseXNToArray(const char* xN);
+        std::array<int8_t, 2> parseXNToArray(const char* xN);
         void setMode(uint8_t mode);
 
         boolean socketConnect();

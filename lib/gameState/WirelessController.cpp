@@ -64,7 +64,7 @@ boolean WirelessController::socketConnect() {
 
 void WirelessController::queueJsonMove(StaticJsonDocument<jsonCapacity> doc) {
     string specialFlag;
-    std::array<uint8_t, 2> start, end;
+    std::array<int8_t, 2> start, end;
 
     try {
         specialFlag = doc["flags"].as<string>();
@@ -77,8 +77,8 @@ void WirelessController::queueJsonMove(StaticJsonDocument<jsonCapacity> doc) {
     }
 }
 
-std::array<uint8_t, 2> WirelessController::parseXNToArray(const char* xN) {
-    std::array<uint8_t, 2> out;
+std::array<int8_t, 2> WirelessController::parseXNToArray(const char* xN) {
+    std::array<int8_t, 2> out;
     /**
      * Since only lowercase, the char can be converted to decimal with
      * a logical AND operation
