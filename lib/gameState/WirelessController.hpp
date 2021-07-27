@@ -7,6 +7,7 @@
 #include <ArduinoWebsockets.h>
 
 #include <array>
+#include <queue>
 
 enum mode { Bluetooth, WIFI };
 
@@ -50,7 +51,8 @@ class WirelessController {
         uint8_t bluFiMode;
         websockets::WebsocketsClient webSocket;
         JsonMove newMove;
-        
+        std::queue<JsonMove> moves;
+
     public :
         WirelessController(String pass, String ssid, String url);
         WirelessController();
@@ -69,6 +71,8 @@ class WirelessController {
 
         //========================== Helper Methods =========================//
 
+        bool hasJson() { return !moves.empty(); }
+
         //---------------- Defined in WirelessController.cpp ----------------//
         
         boolean connectWiFi(String ssid, String password);
@@ -79,12 +83,14 @@ class WirelessController {
          * containing only unsigned integers and a char – saves space in the
          * stack during runtime and avoids memory leaks. from JsonDocument
          */
-        JsonMove getMove(StaticJsonDocument<jsonCapacity> doc);
+        void queueJsonMove(StaticJsonDocument<jsonCapacity> doc);
         std::array<uint8_t, 2> parseXNToArray(const char* xN);
         void setMode(uint8_t mode);
 
         boolean socketConnect();
         static void socketMessageRecieved(websockets::WebsocketsMessage message);
+
+        JsonMove deQueue() { JsonMove out = moves.front(); moves.pop(); return out; }
 };
 
 #endif
