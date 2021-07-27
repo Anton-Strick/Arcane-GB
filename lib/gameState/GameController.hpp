@@ -4,8 +4,10 @@
 #define GAMECONTROLLER_HPP
 
 #include <array>
+
 #include "Piece.hpp"
 #include "Queue.hpp"
+#include "WirelessController.hpp"
 
 #define NUM_PIECES 32
 
@@ -42,6 +44,8 @@ class GameController {
         void moveKnightToPosition(Piece p, std::array<int8_t, 2> pos);
         void retire(Piece p);
         void retirePieceAt(std::array<int8_t, 2> pos);
+
+        void queueJsonMove(JsonMove jMove);
 };
 
 Move xyToMotors(double dx, double dy, bool mE = false);

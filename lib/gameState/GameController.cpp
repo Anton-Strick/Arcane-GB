@@ -151,6 +151,14 @@ int8_t GameController::pieceAt(std::array<int8_t, 2> pos) {
     return int8_t(-1);
 }
 
+void GameController::queueJsonMove(JsonMove jMove) {
+    if (jMove.specialFlag.compare("c")) {
+        retirePieceAt(jMove.endPos);
+    }
+
+    movePieceAtPos(jMove.startPos, jMove.endPos);
+}
+
 void GameController::initializePieces() {
     /**
      * White Piece Indexes
