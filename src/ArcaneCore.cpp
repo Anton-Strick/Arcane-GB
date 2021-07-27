@@ -91,12 +91,16 @@ void setup() {
 }
 
 void loop() {
-    delay(100);
+    delay(50);
     if (robot.moveComplete) {
         if (robot.hasMoves()) {
             robot.printReport();
             robot.loadMove();
         }
+    }
+
+    if (wireless.hasJson()) {
+        game.queueJsonMove(wireless.deQueue());
     }
 }
 

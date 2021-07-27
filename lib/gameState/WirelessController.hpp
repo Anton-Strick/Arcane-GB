@@ -7,6 +7,7 @@
 #include <ArduinoWebsockets.h>
 
 #include <array>
+#include <queue>
 
 enum mode { Bluetooth, WIFI };
 
@@ -19,7 +20,7 @@ const int jsonCapacity = 512;
 
 struct JsonMove {
     string specialFlag;
-    array<uint8_t, 2> startPos, endPos;
+    array<int8_t, 2> startPos, endPos;
 
     JsonMove() {
         specialFlag = "n";
@@ -33,7 +34,7 @@ struct JsonMove {
      * @param start an array with the initial coordinates (x, y)
      * @param end   an array with the terminal coordinates (x, y)
      */
-    JsonMove(string flag, array<uint8_t, 2> start, array<uint8_t, 2> end) {
+    JsonMove(string flag, array<int8_t, 2> start, array<int8_t, 2> end) {
         specialFlag = flag;
         startPos = start;
         endPos = end;
@@ -50,7 +51,8 @@ class WirelessController {
         uint8_t bluFiMode;
         websockets::WebsocketsClient webSocket;
         JsonMove newMove;
-        
+        std::queue<JsonMove> moves;
+
     public :
         WirelessController(String pass, String ssid, String url);
         WirelessController();
@@ -69,6 +71,8 @@ class WirelessController {
 
         //========================== Helper Methods =========================//
 
+        bool hasJson() { return !moves.empty(); }
+
         //---------------- Defined in WirelessController.cpp ----------------//
         
         boolean connectWiFi(String ssid, String password);
@@ -79,12 +83,14 @@ class WirelessController {
          * containing only unsigned integers and a char – saves space in the
          * stack during runtime and avoids memory leaks. from JsonDocument
          */
-        JsonMove getMove(StaticJsonDocument<jsonCapacity> doc);
-        std::array<uint8_t, 2> parseXNToArray(const char* xN);
+        void queueJsonMove(StaticJsonDocument<jsonCapacity> doc);
+        std::array<int8_t, 2> parseXNToArray(const char* xN);
         void setMode(uint8_t mode);
 
         boolean socketConnect();
         static void socketMessageRecieved(websockets::WebsocketsMessage message);
+
+        JsonMove deQueue() { JsonMove out = moves.front(); moves.pop(); return out; }
 };
 
 #endif

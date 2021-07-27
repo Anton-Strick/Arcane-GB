@@ -16,8 +16,9 @@ WirelessController::WirelessController(String s, String p, String u) {
         StaticJsonDocument<jsonCapacity> doc;
         DeserializationError err = deserializeJson(doc, message.data());
         if (!err) {
-            
-        } 
+            // Do nothing
+        }
+        queueJsonMove(doc);
     });
 }
 
@@ -61,24 +62,23 @@ boolean WirelessController::socketConnect() {
     return webSocket.connect(url, 8000, "/");
 }
 
-JsonMove WirelessController::getMove(StaticJsonDocument<jsonCapacity> doc) {
+void WirelessController::queueJsonMove(StaticJsonDocument<jsonCapacity> doc) {
     string specialFlag;
-    std::array<uint8_t, 2> start, end;
+    std::array<int8_t, 2> start, end;
 
     try {
         specialFlag = doc["flags"].as<string>();
         start = parseXNToArray(doc["from"].as<const char*>());
         end = parseXNToArray(doc["to"].as<const char*>());
+        JsonMove out(specialFlag, start, end);
+        moves.push(out);
     } catch (...) {
         Serial.println("ERROR:  COULD NOT getMove!");
     }
-    
-    
-    return JsonMove(specialFlag, start, end);
 }
 
-std::array<uint8_t, 2> WirelessController::parseXNToArray(const char* xN) {
-    std::array<uint8_t, 2> out;
+std::array<int8_t, 2> WirelessController::parseXNToArray(const char* xN) {
+    std::array<int8_t, 2> out;
     /**
      * Since only lowercase, the char can be converted to decimal with
      * a logical AND operation
