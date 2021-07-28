@@ -27,7 +27,7 @@ class GameController {
         Move getNextMove() { return gameQueue.deQueue(); }
 
         //------------------------------ Set Methods -----------------------------//
-        
+
         void setID(uint8_t id) { gameID = id; }
 
         //============================= Helper Methods ===========================//
@@ -54,8 +54,8 @@ class GameController {
         void insertPiece(int8_t i, Piece p);
 
         /**
-         * Queues the given JsonMove into the game controller, if needed
-         * a retirement function is called.
+         * Queues the given JsonMove into the game controller, if needed, 
+         * a retirement function is called to remove the captured Piece
          * @param jMove A valid JsonMove with a piece's start and end position
          */
         void queueJsonMove(JsonMove jMove);
