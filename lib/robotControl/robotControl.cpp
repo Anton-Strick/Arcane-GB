@@ -6,7 +6,7 @@
  * "this.intializeMotors() in order to function properly."
  */
 RobotControl::RobotControl() {
-    currentPosition = { 0, (NUM_ROWS - 1) };
+    currentPosition = { 0, 11 };
 }
 
 /**
@@ -52,30 +52,22 @@ void RobotControl::stepMotors() {
     moveComplete = temp;
 }
 
-void RobotControl::loadMove() {
-    disableMagnet();
-    if (queue.hasMoves()) { // If has Moves
-        moveComplete = false;
-        
-        Move tmp = dequeueMove();
-
-        changePosition(tmp.getDelta());
-
-        // Magnet disable or enable
-        if (tmp.getMagnetEnabled()) {
-            enableMagnet();
-        }
-
+void RobotControl::loadMove(Move m) {
+    if (m.getMagnetEnabled()) {
+        enableMagnet();
         delay(250);
+    }
 
-        // Motor direction and steps
-        for (uint8_t i = 0 ; i < NUM_MOTORS ; i++) {
-            motors[i]->setDir(tmp.getDirs()[i]);
-            motors[i]->setTarget(tmp.getSteps()[i]);
-        }
-    } // End has Moves
+    else {
+        disableMagnet();
+    }
 
-    // No action if ! has moves
+    for (int8_t i = 0 ; i < NUM_MOTORS ; i++) {
+        motors[i]->setDir(m.getDirs()[i]);
+        motors[i]->setTarget(m.getSteps()[i]);
+    }
+
+    moveComplete = false;
 }
 
 void RobotControl::changePosition(std::array<int8_t, 2> delta) {
@@ -95,9 +87,6 @@ void RobotControl::home() {
 
 void RobotControl::printReport() {
     Serial.println("========== R-Control Report ===========");
-    Serial.printf("Number of Moves in Queue:  %d", queue.getSize());
     motors[0]->displayReport();
     motors[1]->displayReport();
-    Serial.printf("\nNext Move:     ");
-    queue.getTail().printMove();
 }

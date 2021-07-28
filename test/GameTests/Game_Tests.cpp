@@ -25,13 +25,11 @@ void test_Piece_Construction(void) {
 }
 
 void test_Piece_Move(void) {
-    std::array<int8_t, 2> position = { 7, 7 };
-    uint8_t pieceID = (uint8_t) 0b10101000;
-    Piece bRook(position, pieceID);
+    GameController subject;
     std::array<int8_t, 2> newPosition = { 0, 7 };
-    bRook.setPosition(newPosition);
-    bool test = newPosition == bRook.getPosition();
-    TEST_ASSERT_EQUAL(true, test);
+    subject.getPiece(0)->setPosition(newPosition);
+    bool test = (newPosition == subject.getPiece(0)->getPosition());
+    TEST_ASSERT_EQUAL(7, subject.getPiece(0)->getPosition()[1]);
 }
 
 void test_Piece_Get_Color(void) {
@@ -70,24 +68,24 @@ void test_Controller_Construction(void) {
 
 void test_Get_Piece(void) {
     GameController subject;
-    Piece test = subject.getPiece(0); // Should be pawn-0
+    Piece * test = subject.getPiece(0); // Should be pawn-0
     std::array<int8_t, 2> pos = { 0, 3 };
     uint8_t id = uint8_t(0b00000000);
 
-    if (pos != test.getPosition()) {
+    if (pos != test->getPosition()) {
         TEST_FAIL_MESSAGE("ERROR:  INCORRECT POSITION");
     }
 
-    if (id != test.getID()) {
+    if (id != test->getID()) {
         TEST_FAIL_MESSAGE("ERROR: INCORRECT ID");
     }
 }
 
 void test_Get_Piece_At(void) {
     GameController subject;
-    std::array<int8_t, 2> pos = {0, 2};
+    std::array<int8_t, 2> pos = {4, 3};
     int8_t index = subject.pieceAt(pos);
-    TEST_ASSERT_EQUAL(8, index);
+    TEST_ASSERT_EQUAL(4, index);
 }
 
 void test_Get_Transposition(void) {

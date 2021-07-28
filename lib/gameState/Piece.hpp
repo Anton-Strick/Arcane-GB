@@ -33,7 +33,7 @@ enum Piece_Type {
 
 class Piece {
     private:
-        std::array<int8_t, 2> position = { { 0, 0 } };
+        std::array<int8_t, 2> position;
         uint8_t pieceID;
 
     public:
@@ -43,8 +43,7 @@ class Piece {
         uint8_t getID() { return pieceID; }
 
         //-------------------------- Set Functions --------------------------//
-        void setPosition(std::array<int8_t, 2> p) { position[0] = p[0]; 
-                                                     position[1] = p[1]; }
+        void setPosition(std::array<int8_t, 2> p) { position = p; }
         void setID(uint8_t id) { pieceID = id; }
 
         //========================== Helper Methods =========================//
