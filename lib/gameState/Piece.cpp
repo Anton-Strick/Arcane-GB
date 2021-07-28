@@ -8,8 +8,7 @@ Piece::Piece(std::array<int8_t, 2> p, uint8_t id) {
 }
 
 Piece::Piece() {
-    std::array<int8_t, 2> tmpPosition = { 0, 0 };
-    this->setPosition(tmpPosition);
+    position = { 0, 0 };
     this->setID(0);
 }
 

@@ -1,31 +1,25 @@
 #include <Arduino.h>
 #include <WiFi.h>
-#include <ArduinoWebsockets.h>
+#include <WebSocketsClient.h>
 
 #include <array>
+#include <string>
 
 #include "WirelessController.hpp"
-using namespace websockets;
 
 WirelessController::WirelessController(String s, String p, String u) {
     ssid = s;
     password = p;
     url = u;
     bluFiMode = WIFI;
-    webSocket.onMessage([&] (websockets::WebsocketsMessage message) {
-        StaticJsonDocument<jsonCapacity> doc;
-        DeserializationError err = deserializeJson(doc, message.data());
-        if (!err) {
-            // Do nothing
-        }
-        queueJsonMove(doc);
+    webSocket.onEvent([this](WStype_t type, uint8_t * payload, size_t length) {
+        socketEventRecieved(type, payload, length);
     });
 }
 
 WirelessController::WirelessController() {
-    webSocket.onMessage([&] (websockets::WebsocketsMessage message) {
+    bluFiMode = WIFI;
 
-    });
 }
 
 boolean WirelessController::connectWiFi(String ssid, String password) {
@@ -49,7 +43,10 @@ boolean WirelessController::connectWiFi(String ssid, String password) {
         return true;
     }
 
-    else return false;
+    else {
+        Serial.printf("ERROR:  COULD NOT CONNECT\n\n");
+        return false;
+    }
 }
 
 boolean WirelessController::connectWiFi() {
@@ -59,21 +56,35 @@ boolean WirelessController::connectWiFi() {
 boolean WirelessController::socketConnect() {
     if (WiFi.status() != WL_CONNECTED)
         return false;
-    return webSocket.connect(url, 8000, "/");
+    webSocket.begin(url, 8000);
+
+    return true;
 }
 
-void WirelessController::queueJsonMove(StaticJsonDocument<jsonCapacity> doc) {
-    string specialFlag;
-    std::array<int8_t, 2> start, end;
+void WirelessController::queueJsonMove(unsigned char * payload) {
+    static uint8_t move = 1;
+    String jsonString( reinterpret_cast< char const *> (payload) );
+    std::string specialFlag;
 
-    try {
-        specialFlag = doc["flags"].as<string>();
-        start = parseXNToArray(doc["from"].as<const char*>());
-        end = parseXNToArray(doc["to"].as<const char*>());
-        JsonMove out(specialFlag, start, end);
-        moves.push(out);
-    } catch (...) {
-        Serial.println("ERROR:  COULD NOT getMove!");
+    StaticJsonDocument<jsonCapacity> doc;
+    DeserializationError err = deserializeJson(doc, jsonString);
+
+    if (!err) {
+        std::array<int8_t, 2> start, end;
+        try {
+            Serial.printf("Move %d: ", move++);
+            specialFlag = doc["flags"].as<string>();
+            start = parseXNToArray(doc["from"].as<const char *>());
+            Serial.printf("%s to ", doc["from"].as<const char *>());
+
+            end = parseXNToArray(doc["to"].as<const char*>());
+            Serial.printf("%s\n", doc["to"].as<const char *> ());
+
+            JsonMove out(specialFlag, start, end);
+            moves.push(out);
+        } catch (...) {
+            Serial.println("ERROR:  COULD NOT getMove!");
+        }
     }
 }
 
@@ -86,17 +97,34 @@ std::array<int8_t, 2> WirelessController::parseXNToArray(const char* xN) {
      *     a & 0x1f = 0110 0001 * 0001 1111 = 0000 0001 (d1)
      *     z & 0x1f = 0111 1010 * 0001 1111 = 0001 1010 (d26)
      */
-    out[0] = (xN[0] & 0x1f) + 1; // a = 2, not 0, due to graveyard
-    out[1] = (xN[1] & 0xf) - 1; // Similar Process. No side
+    out[0] = (xN[0] & 0x1f) - 1; // a = 0
+    out[1] = (xN[1] & 0xf) + 1;  // Must account for the graveyard
     return out;
 }
 
 
-void WirelessController::socketMessageRecieved(websockets::WebsocketsMessage message) {
-    StaticJsonDocument<jsonCapacity> doc;
-    DeserializationError err = deserializeJson(doc, message.data());
-    if (!err) {
+void WirelessController::socketEventRecieved(WStype_t type, uint8_t * payload, size_t length) {
+    switch (type) {
+        case WStype_DISCONNECTED : 
+            Serial.println("[WebSocket] Disconnected");
+            break;
+        
+        case WStype_CONNECTED :
+            Serial.println("[WebSocket] Connected");
+            break;
 
+        case WStype_TEXT : 
+            queueJsonMove(payload);
+            break;
+
+        case WStype_BIN :
+            Serial.println("[WebSocket] Recieved Binary");
+            break;
+        
+        case WStype_ERROR :
+            Serial.println("[WebSocket] ERROR");
+        default :
+            break;
     }
 }
 

@@ -25,7 +25,7 @@ class RobotControl {
         array<int8_t, 2> currentPosition;
         
     public:
-        bool moveComplete = true;
+        volatile bool moveComplete = true;
         RobotControl(); // Default Constructor
         //--------------------------- Get Methods ---------------------------//
 
@@ -63,7 +63,7 @@ class RobotControl {
         void transpose(uint8_t indicator, bool toJunction = false);
         void home();
 
-        void loadMove();
+        void loadMove(Move m);
         void queueMoves(Queue q);
 
         void changePosition(std::array<int8_t, 2> delta);

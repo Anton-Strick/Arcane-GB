@@ -14,23 +14,24 @@
 class GameController {
     private:
         uint8_t gameID;
-        std::array<Piece, NUM_PIECES> pieces;
         std::array<int8_t, 2> robotPosition;
         Queue gameQueue;
+        std::array<Piece *, NUM_PIECES> pieces;
 
     public:
+        
         //--------------------------- Get Methods ---------------------------//
 
         uint8_t getID() { return gameID; }
-        Piece getPiece(int index) { return pieces[index]; }
-        Queue getGameQueue() { return gameQueue; }
+        Piece * getPiece(int index) { return pieces[index]; }
+        Move getNextMove() { return gameQueue.deQueue(); }
 
         //--------------------------- Set Methods ---------------------------//
 
         void setID(uint8_t id) { gameID = id; }
 
         //========================== Helper Methods =========================//
-
+        bool hasMoves() { return gameQueue.hasMoves(); }
         //------------------ Defined in GameController.cpp ------------------//
         GameController();
 

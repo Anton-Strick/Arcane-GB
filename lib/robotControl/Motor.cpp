@@ -44,8 +44,7 @@ boolean Motor::init() {
 void Motor::step()  { 
     if (motorPosition != targetPosition) {
         digitalWrite(stepPin, !digitalRead(stepPin)); // High Edge
-        delay(1); // Minimum step interval = 100nSec
-        digitalWrite(stepPin, !digitalRead(stepPin)); // Low Edge
+        
         switch (this->getDir()) {
             case Clockwise : 
                 motorPosition += 1;
@@ -54,6 +53,8 @@ void Motor::step()  {
                 motorPosition -= 1;
                 break;
         }
+
+        digitalWrite(stepPin, !digitalRead(stepPin)); // Low Edge
     } // End motor reached target
     else
         isComplete = true;

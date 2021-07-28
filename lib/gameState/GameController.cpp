@@ -41,18 +41,38 @@ Move transpose(Piece p, bool deTranspose) {
 void GameController::retire(Piece p) {
     Queue retirePath; // Output
     std::array<int8_t, 2> pos = p.getPosition();
-    int8_t dX, dY;
+    double dX, dY, transposeX, transposeY;
     dX = p.getRetireCol() - pos[0];
     dY = p.getRetireRow() - pos[1];
 
-    retirePath.enQueue(transpose(p));
-    retirePath.enQueue(xyToMotors(dX, 0));
-    retirePath.enQueue(xyToMotors(0, dY));
-    retirePath.enQueue(transpose(p, true));
+    if (dX == 0) {
+        transposeX = (pos[0] > 3) ? 0.5 : -0.5;
+        transposeY = (0 > dY) ? -0.5 : 0.5;
+
+        dY += ( 0 > dY ) ? 1 : -1;
+
+        retirePath.enQueue(xyToMotors(transposeX, transposeY));
+        retirePath.enQueue(xyToMotors(dX, 0));
+        retirePath.enQueue(xyToMotors(0, dY));
+        retirePath.enQueue(xyToMotors((-1 * transposeX), transposeY));
+    }
+
+    else {
+        transposeX = (0 > dX) ? -0.5 : 0.5;
+        transposeY = (0 > dY) ? -0.5 : 0.5;
+
+        dX += ( 0 > dX ) ? 1 : -1;
+        dY += ( 0 > dY ) ? 1 : -1;
+
+        retirePath.enQueue(xyToMotors(transposeX, transposeY));
+        retirePath.enQueue(xyToMotors(dX, 0));
+        retirePath.enQueue(xyToMotors(0, dY));
+        retirePath.enQueue(xyToMotors(transposeX, transposeY));
+    }
 
 
-    pos = { p.getRetireCol(), p.getRetireRow() };
-    p.setPosition(pos);  // Set Pieces future position
+    std::array<int8_t, 2> end = { p.getRetireCol(), p.getRetireRow() };
+    pieces[pieceAt(pos)]->setPosition(end);  // Set Pieces future position
     robotPosition = pos; // Update robot's future position
 
     gameQueue.enQueue(retirePath);
@@ -65,58 +85,54 @@ void GameController::movePieceToPosition(Piece p, std::array<int8_t, 2> pos) {
     }
 
     Queue path;
-    int8_t dX, dY;
+    double dX, dY;
     std::array<int8_t, 2> start = p.getPosition();
 
     //---------------- Move to Piece ---------------//
-    dX = start[0] - robotPosition[0];
-    dY = start[1] - robotPosition[1];
+    dX = double(start[0] - robotPosition[0]);
+    dY = double(start[1] - robotPosition[1]);
 
     path.enQueue(xyToMotors(dX, dY));
 
     //---------------- Move the Piece --------------//
-    dX = pos[0] - start[1];
+    dX = pos[0] - start[0];
     dY = pos[1] - start[1];
 
     path.enQueue(xyToMotors(dX, dY, true));
-
+    pieces[pieceAt(start)]->setPosition(pos);
     robotPosition = pos;
 
     gameQueue.enQueue(path);
 }
 
 void GameController::moveKnightToPosition(Piece p, std::array<int8_t, 2> pos) {
-    if (p.getPieceType() != Knight) {
-        movePieceToPosition(p, pos);
-        return;
-    }
-
     Queue path;
-    int8_t dX, dY;
+    double dX, dY;
     double transposeX, transposeY;
     std::array<int8_t, 2> start = p.getPosition();
 
     //---------------- Move to Piece ---------------//
-    dX = start[0] - robotPosition[0];
-    dY = start[1] - robotPosition[1];
+    dX = double(start[0] - robotPosition[0]);
+    dY = double(start[1] - robotPosition[1]);
 
     path.enQueue(xyToMotors(dX, dY));
 
     //---------- Transpose Based on delta ----------//
-    dX = pos[0] - start[0];
-    dY = pos[1] - start[1];
+    dX = double(pos[0] - start[0]);
+    dY = double(pos[1] - start[1]);
 
     transposeX = (dX > 0) ? 0.5 : -0.5;
     transposeY = (dY > 0) ? 0.5 : -0.5;
 
     path.enQueue(xyToMotors(transposeX, transposeY, true));
 
-    dX -= 1;
-    dY -= 1;
+    dX -= transposeX * 2 ;
+    dY -= transposeY * 2;
 
     path.enQueue(xyToMotors(dX, dY, true));
     path.enQueue(xyToMotors(transposeX, transposeY, true));
 
+    pieces[pieceAt(start)]->setPosition(pos);
     robotPosition = pos;
 
     gameQueue.enQueue(path);
@@ -130,14 +146,14 @@ void GameController::moveKnightToPosition(Piece p, std::array<int8_t, 2> pos) {
 void GameController::movePieceAtPos(std::array<int8_t, 2> start, std::array<int8_t, 2> end) {
     int8_t pieceIndex = pieceAt(start);
     if (pieceIndex >= 0) {
-        movePieceToPosition(getPiece(pieceIndex), end);
+        movePieceToPosition(*getPiece(pieceIndex), end);
     }
 }
 
 void GameController::retirePieceAt(std::array<int8_t, 2> pos) {
     int8_t pieceIndex = pieceAt(pos);
     if (pieceIndex >= 0) {
-        retire(getPiece(pieceIndex));
+        retire(*getPiece(pieceIndex));
     }
 }
 
@@ -146,13 +162,12 @@ void GameController::retirePieceAt(std::array<int8_t, 2> pos) {
  * there, the method returns -1
  */
 int8_t GameController::pieceAt(std::array<int8_t, 2> pos) {
-    int i;
+    int8_t i;
     for (i = 0 ; i < NUM_PIECES ; i++) {
-        if (pieces[i].getPosition() == pos) {
+        if (pieces[i]->getPosition() == pos) {
             return i;
         }
     }
-
     return int8_t(-1);
 }
 
@@ -162,11 +177,13 @@ int8_t GameController::pieceAt(std::array<int8_t, 2> pos) {
  * @param jMove A valid JsonMove with a piece's start and end position
  */
 void GameController::queueJsonMove(JsonMove jMove) {
-    if (jMove.specialFlag.compare("c")) {
+    int8_t index = pieceAt(jMove.endPos);
+    if (index >= 0 ) {
+        Serial.println("Retiring");
         retirePieceAt(jMove.endPos);
     }
-
     movePieceAtPos(jMove.startPos, jMove.endPos);
+
 }
 
 void GameController::initializePieces() {
@@ -203,8 +220,8 @@ void GameController::initializePieces() {
         whiteTmpPos[0] = currCol;
         blackTmpPos[0] = currCol;
 
-        pieces[whiteIndex++] = Piece(whiteTmpPos, whiteID);
-        pieces[blackIndex++] = Piece(blackTmpPos, blackID);
+        pieces[whiteIndex++] = new Piece(whiteTmpPos, whiteID);
+        pieces[blackIndex++] = new Piece(blackTmpPos, blackID);
     }
 
     // Initialize Rooks, knights, and bishops. Piece enum increments by 16
@@ -220,8 +237,8 @@ void GameController::initializePieces() {
         whiteTmpPos[0] = currCol;
         blackTmpPos[0] = currCol;
 
-        pieces[whiteIndex++] = Piece(whiteTmpPos, whiteID);
-        pieces[blackIndex++] = Piece(blackTmpPos, blackID);
+        pieces[whiteIndex++] = new Piece(whiteTmpPos, whiteID);
+        pieces[blackIndex++] = new Piece(blackTmpPos, blackID);
 
         //----------------- Instantiate the Other Twin -----------------//
         whiteTmpPos[0] = NUM_COLS - 1 - currCol;
@@ -230,8 +247,8 @@ void GameController::initializePieces() {
         whiteID = White | piece | whiteTmpPos[0];
         blackID = Black | piece | blackTmpPos[0];
 
-        pieces[whiteIndex++] = Piece(whiteTmpPos, whiteID);
-        pieces[blackIndex++] = Piece(blackTmpPos, blackID);
+        pieces[whiteIndex++] = new Piece(whiteTmpPos, whiteID);
+        pieces[blackIndex++] = new Piece(blackTmpPos, blackID);
 
         piece += 16;
     }
@@ -246,8 +263,8 @@ void GameController::initializePieces() {
     whiteTmpPos[0] = currCol;
     blackTmpPos[0] = currCol;
 
-    pieces[whiteIndex++] = Piece(whiteTmpPos, whiteID);
-    pieces[blackIndex++] = Piece(blackTmpPos, blackID);
+    pieces[whiteIndex++] = new Piece(whiteTmpPos, whiteID);
+    pieces[blackIndex++] = new Piece(blackTmpPos, blackID);
 
     // Initialize Kings
     piece = uint8_t(King);
@@ -259,14 +276,14 @@ void GameController::initializePieces() {
     whiteTmpPos[0] = currCol;
     blackTmpPos[0] = currCol;
 
-    pieces[whiteIndex] = Piece(whiteTmpPos, whiteID);
-    pieces[blackIndex] = Piece(blackTmpPos, blackID);
+    pieces[whiteIndex] = new Piece(whiteTmpPos, whiteID);
+    pieces[blackIndex] = new Piece(blackTmpPos, blackID);
 }
 
 /**
  * Converts cartesian movement into coreXY movement
- * @param {int16_t} dX The number of steps in the X direction
- * @param {int16_t} dY The number of steps in the Y direction
+ * @param  dX The number of steps in the X direction
+ * @param  dY The number of steps in the Y direction
  * @return Move containing the direction and number of steps required
  *         to achieve the desired motion
  */

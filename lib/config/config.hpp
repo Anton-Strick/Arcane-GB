@@ -14,7 +14,7 @@
 #define STEPS_PER_MM       39.6
 #define MM_PER_SQUARE      37.25
 
-enum dir { AntiClockwise = 1, Clockwise = 0 };
+enum dir { AntiClockwise = 0, Clockwise = 1 };
 
 // --------------------------------- Motor 0 Definition ---------------------------------
 #define EN_PIN0             18         // Enable

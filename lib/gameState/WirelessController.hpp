@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <WiFi.h>
-#include <ArduinoWebsockets.h>
+#include <WebSocketsClient.h>
 
 #include <array>
 #include <queue>
@@ -49,7 +49,7 @@ class WirelessController {
         String ssid;
         String url;
         uint8_t bluFiMode;
-        websockets::WebsocketsClient webSocket;
+        WebSocketsClient webSocket;
         JsonMove newMove;
         std::queue<JsonMove> moves;
 
@@ -72,6 +72,7 @@ class WirelessController {
         //========================== Helper Methods =========================//
 
         bool hasJson() { return !moves.empty(); }
+        void idle() { webSocket.loop(); }
 
         //---------------- Defined in WirelessController.cpp ----------------//
         
@@ -83,12 +84,12 @@ class WirelessController {
          * containing only unsigned integers and a char – saves space in the
          * stack during runtime and avoids memory leaks. from JsonDocument
          */
-        void queueJsonMove(StaticJsonDocument<jsonCapacity> doc);
+        void queueJsonMove(unsigned char * payload);
         std::array<int8_t, 2> parseXNToArray(const char* xN);
         void setMode(uint8_t mode);
 
         boolean socketConnect();
-        static void socketMessageRecieved(websockets::WebsocketsMessage message);
+        void socketEventRecieved(WStype_t type, uint8_t * payload, size_t length);
 
         JsonMove deQueue() { JsonMove out = moves.front(); moves.pop(); return out; }
 };
