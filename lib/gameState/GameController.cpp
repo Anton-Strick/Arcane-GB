@@ -8,184 +8,6 @@ GameController::GameController() {
     robotPosition = { 0, (NUM_ROWS - 1) };
 }
 
-/**
- * Returns an integer (0-4) to indicate which direcection a piece should
- * transpose to in order to avoid knocking into other pieces.
- * 0b00 - up and right
- * 0b01 - up and left
- * 0b10 - down and right
- * 0b11 - down and left
- * @param position An int array of size 2 which contains the starting
- *                 position of a piece. [x,y]
- */
-Move transpose(std::array<int8_t, 2> position, bool deTranspose) {
-    double dX, dY;
-    
-    if (position[0] > 4)
-        dX = int8_t(-0.5);  // Transpose Left
-
-    else dX = int8_t(0.5); // Transpose Right
-
-    if (position[1] > 5)
-        dY = int8_t(-0.5);  // Transpose Down
-    
-    else dY = int8_t(0.5);  // Transpose Up
-
-    return xyToMotors(dX, dY);
-}
-
-Move transpose(Piece p, bool deTranspose) {
-    return transpose(p.getPosition());
-}
-
-void GameController::retire(Piece p) {
-    Queue retirePath; // Output
-    std::array<int8_t, 2> pos = p.getPosition();
-    double dX, dY, transposeX, transposeY;
-    dX = p.getRetireCol() - pos[0];
-    dY = p.getRetireRow() - pos[1];
-
-    if (dX == 0) {
-        transposeX = (pos[0] > 3) ? 0.5 : -0.5;
-        transposeY = (0 > dY) ? -0.5 : 0.5;
-
-        dY += ( 0 > dY ) ? 1 : -1;
-
-        retirePath.enQueue(xyToMotors(transposeX, transposeY));
-        retirePath.enQueue(xyToMotors(dX, 0));
-        retirePath.enQueue(xyToMotors(0, dY));
-        retirePath.enQueue(xyToMotors((-1 * transposeX), transposeY));
-    }
-
-    else {
-        transposeX = (0 > dX) ? -0.5 : 0.5;
-        transposeY = (0 > dY) ? -0.5 : 0.5;
-
-        dX += ( 0 > dX ) ? 1 : -1;
-        dY += ( 0 > dY ) ? 1 : -1;
-
-        retirePath.enQueue(xyToMotors(transposeX, transposeY));
-        retirePath.enQueue(xyToMotors(dX, 0));
-        retirePath.enQueue(xyToMotors(0, dY));
-        retirePath.enQueue(xyToMotors(transposeX, transposeY));
-    }
-
-
-    std::array<int8_t, 2> end = { p.getRetireCol(), p.getRetireRow() };
-    pieces[pieceAt(pos)]->setPosition(end);  // Set Pieces future position
-    robotPosition = pos; // Update robot's future position
-
-    gameQueue.enQueue(retirePath);
-}
-
-void GameController::movePieceToPosition(Piece p, std::array<int8_t, 2> pos) {
-    if (p.getPieceType() == Knight) {
-        moveKnightToPosition(p, pos);
-        return;
-    }
-
-    Queue path;
-    double dX, dY;
-    std::array<int8_t, 2> start = p.getPosition();
-
-    //---------------- Move to Piece ---------------//
-    dX = double(start[0] - robotPosition[0]);
-    dY = double(start[1] - robotPosition[1]);
-
-    path.enQueue(xyToMotors(dX, dY));
-
-    //---------------- Move the Piece --------------//
-    dX = pos[0] - start[0];
-    dY = pos[1] - start[1];
-
-    path.enQueue(xyToMotors(dX, dY, true));
-    pieces[pieceAt(start)]->setPosition(pos);
-    robotPosition = pos;
-
-    gameQueue.enQueue(path);
-}
-
-void GameController::moveKnightToPosition(Piece p, std::array<int8_t, 2> pos) {
-    Queue path;
-    double dX, dY;
-    double transposeX, transposeY;
-    std::array<int8_t, 2> start = p.getPosition();
-
-    //---------------- Move to Piece ---------------//
-    dX = double(start[0] - robotPosition[0]);
-    dY = double(start[1] - robotPosition[1]);
-
-    path.enQueue(xyToMotors(dX, dY));
-
-    //---------- Transpose Based on delta ----------//
-    dX = double(pos[0] - start[0]);
-    dY = double(pos[1] - start[1]);
-
-    transposeX = (dX > 0) ? 0.5 : -0.5;
-    transposeY = (dY > 0) ? 0.5 : -0.5;
-
-    path.enQueue(xyToMotors(transposeX, transposeY, true));
-
-    dX -= transposeX * 2 ;
-    dY -= transposeY * 2;
-
-    path.enQueue(xyToMotors(dX, dY, true));
-    path.enQueue(xyToMotors(transposeX, transposeY, true));
-
-    pieces[pieceAt(start)]->setPosition(pos);
-    robotPosition = pos;
-
-    gameQueue.enQueue(path);
-}
-
-/**
- * Moves a piece at a given start position to the end position.
- * @param start a valid coordinate location (x, y)
- * @param end   a valid coordinate location (x, y)
- */
-void GameController::movePieceAtPos(std::array<int8_t, 2> start, std::array<int8_t, 2> end) {
-    int8_t pieceIndex = pieceAt(start);
-    if (pieceIndex >= 0) {
-        movePieceToPosition(*getPiece(pieceIndex), end);
-    }
-}
-
-void GameController::retirePieceAt(std::array<int8_t, 2> pos) {
-    int8_t pieceIndex = pieceAt(pos);
-    if (pieceIndex >= 0) {
-        retire(*getPiece(pieceIndex));
-    }
-}
-
-/**
- * Returns the index of a piece at the specified position. If there is no piece
- * there, the method returns -1
- */
-int8_t GameController::pieceAt(std::array<int8_t, 2> pos) {
-    int8_t i;
-    for (i = 0 ; i < NUM_PIECES ; i++) {
-        if (pieces[i]->getPosition() == pos) {
-            return i;
-        }
-    }
-    return int8_t(-1);
-}
-
-/**
- * Queues the given JsonMove into the game controller, if needed
- * a retirement function is called.
- * @param jMove A valid JsonMove with a piece's start and end position
- */
-void GameController::queueJsonMove(JsonMove jMove) {
-    int8_t index = pieceAt(jMove.endPos);
-    if (index >= 0 ) {
-        Serial.println("Retiring");
-        retirePieceAt(jMove.endPos);
-    }
-    movePieceAtPos(jMove.startPos, jMove.endPos);
-
-}
-
 void GameController::initializePieces() {
     /**
      * White Piece Indexes
@@ -280,13 +102,158 @@ void GameController::initializePieces() {
     pieces[blackIndex] = new Piece(blackTmpPos, blackID);
 }
 
-/**
- * Converts cartesian movement into coreXY movement
- * @param  dX The number of steps in the X direction
- * @param  dY The number of steps in the Y direction
- * @return Move containing the direction and number of steps required
- *         to achieve the desired motion
- */
+
+void GameController::queueJsonMove(JsonMove jMove) {
+    int8_t index = pieceAt(jMove.endPos);
+    if (index >= 0 ) {
+        Serial.println("Retiring");
+        retirePieceAt(jMove.endPos);
+    }
+    movePieceAtPos(jMove.startPos, jMove.endPos);
+
+}
+
+
+void GameController::moveHome() {
+    double dX, dY;
+    dX = 0 - robotPosition[0];
+    dY = 0 - robotPosition[1];
+
+    robotPosition = { 0, 0 };
+
+    gameQueue.enQueue(xyToMotors(dX, dY, false));    
+}
+
+
+void GameController::retire(Piece p) {
+    Queue retirePath; // Output
+    std::array<int8_t, 2> pos = p.getPosition();
+    double dX, dY, transposeX, transposeY;
+    dX = p.getRetireCol() - pos[0];
+    dY = p.getRetireRow() - pos[1];
+
+    if (dX == 0) {
+        transposeX = (pos[0] > 3) ? 0.5 : -0.5;
+        transposeY = (0 > dY) ? -0.5 : 0.5;
+
+        dY += ( 0 > dY ) ? 1 : -1;
+
+        retirePath.enQueue(xyToMotors(transposeX, transposeY));
+        retirePath.enQueue(xyToMotors(dX, 0));
+        retirePath.enQueue(xyToMotors(0, dY));
+        retirePath.enQueue(xyToMotors((-1 * transposeX), transposeY));
+    }
+
+    else {
+        transposeX = (0 > dX) ? -0.5 : 0.5;
+        transposeY = (0 > dY) ? -0.5 : 0.5;
+
+        dX += ( 0 > dX ) ? 1 : -1;
+        dY += ( 0 > dY ) ? 1 : -1;
+
+        retirePath.enQueue(xyToMotors(transposeX, transposeY));
+        retirePath.enQueue(xyToMotors(dX, 0));
+        retirePath.enQueue(xyToMotors(0, dY));
+        retirePath.enQueue(xyToMotors(transposeX, transposeY));
+    }
+
+
+    std::array<int8_t, 2> end = { p.getRetireCol(), p.getRetireRow() };
+    pieces[pieceAt(pos)]->setPosition(end);  // Set Pieces future position
+    robotPosition = pos; // Update robot's future position
+
+    gameQueue.enQueue(retirePath);
+}
+
+void GameController::movePieceToPosition(Piece p, std::array<int8_t, 2> pos) {
+    if (p.getPieceType() == Knight) {
+        moveKnightToPosition(p, pos);
+        return;
+    }
+
+    Queue path;
+    double dX, dY;
+    std::array<int8_t, 2> start = p.getPosition();
+
+    //---------------- Move to Piece ---------------//
+    dX = double(start[0] - robotPosition[0]);
+    dY = double(start[1] - robotPosition[1]);
+
+    path.enQueue(xyToMotors(dX, dY));
+
+    //---------------- Move the Piece --------------//
+    dX = pos[0] - start[0];
+    dY = pos[1] - start[1];
+
+    path.enQueue(xyToMotors(dX, dY, true));
+    pieces[pieceAt(start)]->setPosition(pos);
+    robotPosition = pos;
+
+    gameQueue.enQueue(path);
+}
+
+
+void GameController::moveKnightToPosition(Piece p, std::array<int8_t, 2> pos) {
+    Queue path;
+    double dX, dY;
+    double transposeX, transposeY;
+    std::array<int8_t, 2> start = p.getPosition();
+
+    //---------------- Move to Piece ---------------//
+    dX = double(start[0] - robotPosition[0]);
+    dY = double(start[1] - robotPosition[1]);
+
+    path.enQueue(xyToMotors(dX, dY));
+
+    //---------- Transpose Based on delta ----------//
+    dX = double(pos[0] - start[0]);
+    dY = double(pos[1] - start[1]);
+
+    transposeX = (dX > 0) ? 0.5 : -0.5;
+    transposeY = (dY > 0) ? 0.5 : -0.5;
+
+    path.enQueue(xyToMotors(transposeX, transposeY, true));
+
+    dX -= transposeX * 2 ;
+    dY -= transposeY * 2;
+
+    path.enQueue(xyToMotors(dX, dY, true));
+    path.enQueue(xyToMotors(transposeX, transposeY, true));
+
+    pieces[pieceAt(start)]->setPosition(pos);
+    robotPosition = pos;
+
+    gameQueue.enQueue(path);
+}
+
+
+void GameController::movePieceAtPos(std::array<int8_t, 2> start, std::array<int8_t, 2> end) {
+    int8_t pieceIndex = pieceAt(start);
+    if (pieceIndex >= 0) {
+        movePieceToPosition(*getPiece(pieceIndex), end);
+    }
+}
+
+
+void GameController::retirePieceAt(std::array<int8_t, 2> pos) {
+    int8_t pieceIndex = pieceAt(pos);
+    if (pieceIndex >= 0) {
+        retire(*getPiece(pieceIndex));
+    }
+}
+
+
+int8_t GameController::pieceAt(std::array<int8_t, 2> pos) {
+    int8_t i;
+    for (i = 0 ; i < NUM_PIECES ; i++) {
+        if (pieces[i]->getPosition() == pos) {
+            return i;
+        }
+    }
+    return int8_t(-1);
+}
+
+
 Move xyToMotors(double dX, double dY, bool mE /*= false*/) {
     int32_t dA = (dX - dY) * STEPS_PER_MM * MM_PER_SQUARE;
     int32_t dB = (dX + dY) * STEPS_PER_MM * MM_PER_SQUARE;
