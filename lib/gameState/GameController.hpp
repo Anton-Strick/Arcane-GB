@@ -99,8 +99,9 @@ class GameController {
 
 /**
  * Converts cartesian movement into coreXY movement
- * @param  dX The number of steps in the X direction
- * @param  dY The number of steps in the Y direction
+ * @param  dX The number of squares to travel in the X direction
+ * @param  dY The number of squares to travel in the Y direction
+ * @param  mE true:  Magnet is Enabled.  false:  Magnet is disabled (defaults to false)
  * @return Move containing the direction and number of steps required
  *         to achieve the desired motion
  */

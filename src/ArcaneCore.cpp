@@ -15,7 +15,7 @@ void setup() {
     delay(1000);
 
     wireless.connectWiFi();
-    wireless.socketConnect();
+    wireless.connectSocket();
     timerInit();
 }
 

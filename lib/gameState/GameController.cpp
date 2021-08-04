@@ -253,7 +253,6 @@ int8_t GameController::pieceAt(std::array<int8_t, 2> pos) {
     return int8_t(-1);
 }
 
-
 Move xyToMotors(double dX, double dY, bool mE /*= false*/) {
     int32_t dA = (dX - dY) * STEPS_PER_MM * MM_PER_SQUARE;
     int32_t dB = (dX + dY) * STEPS_PER_MM * MM_PER_SQUARE;

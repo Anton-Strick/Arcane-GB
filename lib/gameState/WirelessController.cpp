@@ -13,13 +13,12 @@ WirelessController::WirelessController(String s, String p, String u) {
     url = u;
     bluFiMode = WIFI;
     webSocket.onEvent([this](WStype_t type, uint8_t * payload, size_t length) {
-        socketEventRecieved(type, payload, length);
+        _socketEventRecieved(type, payload, length);
     });
 }
 
 WirelessController::WirelessController() {
     bluFiMode = WIFI;
-
 }
 
 boolean WirelessController::connectWiFi(String ssid, String password) {
@@ -53,7 +52,8 @@ boolean WirelessController::connectWiFi() {
     return connectWiFi(ssid, password);
 }
 
-boolean WirelessController::socketConnect() {
+
+boolean WirelessController::connectSocket() {
     if (WiFi.status() != WL_CONNECTED)
         return false;
     webSocket.begin(url, 8000);
@@ -103,7 +103,7 @@ std::array<int8_t, 2> WirelessController::parseXNToArray(const char* xN) {
 }
 
 
-void WirelessController::socketEventRecieved(WStype_t type, uint8_t * payload, size_t length) {
+void WirelessController::_socketEventRecieved(WStype_t type, uint8_t * payload, size_t length) {
     switch (type) {
         case WStype_DISCONNECTED : 
             Serial.println("[WebSocket] Disconnected");
