@@ -50,7 +50,6 @@ class WirelessController {
         String url;
         uint8_t bluFiMode;
         WebSocketsClient webSocket;
-        JsonMove newMove;
         std::queue<JsonMove> moves;
 
     public :
