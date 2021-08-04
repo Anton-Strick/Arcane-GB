@@ -6,7 +6,7 @@
  * "this.intializeMotors() in order to function properly."
  */
 RobotControl::RobotControl() {
-    currentPosition = { 0, 11 };
+    
 }
 
 /**
@@ -70,16 +70,6 @@ void RobotControl::loadMove(Move m) {
     moveComplete = false;
 }
 
-void RobotControl::changePosition(std::array<int8_t, 2> delta) {
-    currentPosition[0] += delta[0];
-    currentPosition[1] += delta[0];
-}
-
-void RobotControl::queueMoves(Queue q) {
-    while (q.hasMoves()) {
-        queue.enQueue(q.deQueue());
-    }
-}
 
 void RobotControl::home() {
 

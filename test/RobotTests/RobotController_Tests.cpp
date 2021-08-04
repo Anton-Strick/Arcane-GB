@@ -15,6 +15,77 @@ std::array<uint32_t, NUM_MOTORS> steps = {
 };
 Move expected(dirs, steps);
 
+/**
+ * Motor Class Tests
+ */
+void test_Motor_Initial_Position(void) {
+    TMC2209Stepper driver0(&SERIAL_PORT0, R_SENSE, DRIVER_ADDRESS);
+    Motor motor0((uint8_t) 0, driver0, DIAG_PIN0, DIR_PIN0, STEP_PIN0);
+
+    TEST_ASSERT_EQUAL(0, motor0.getPosition());
+}
+
+void test_Motor_Initial_Target(void) {
+    TMC2209Stepper driver0(&SERIAL_PORT0, R_SENSE, DRIVER_ADDRESS);
+    Motor motor0((uint8_t) 0, driver0, DIAG_PIN0, DIR_PIN0, STEP_PIN0);
+
+    TEST_ASSERT_EQUAL(0, motor0.getTarget());
+}
+
+void test_Motor_Init(void) {
+    SERIAL_PORT0.begin(115200, SERIAL_8N1, RXD0, TXD0);
+    TMC2209Stepper driver0(&SERIAL_PORT0, R_SENSE, DRIVER_ADDRESS);
+    Motor motor0((uint8_t) 0, driver0, DIAG_PIN0, DIR_PIN0, STEP_PIN0);
+
+    TEST_ASSERT_EQUAL(true, motor0.init());
+}
+
+void test_Motor_Set_Target(void) {
+    TMC2209Stepper driver0(&SERIAL_PORT0, R_SENSE, DRIVER_ADDRESS);
+    Motor motor0((uint8_t) 0, driver0, DIAG_PIN0, DIR_PIN0, STEP_PIN0);
+
+    motor0.setTarget(1500);
+    TEST_ASSERT_EQUAL(1500, motor0.getTarget());
+}
+
+void test_Motor_Get_Steps_To_Go(void) {
+    TMC2209Stepper driver0(&SERIAL_PORT0, R_SENSE, DRIVER_ADDRESS);
+    Motor motor0((uint8_t) 0, driver0, DIAG_PIN0, DIR_PIN0, STEP_PIN0);
+
+    uint32_t target = 1500;
+    motor0.setTarget(target);
+    TEST_ASSERT_EQUAL(target, motor0.getStepsToGo());
+}
+
+void test_Motor_Set_Direction(void) {
+    TMC2209Stepper driver0(&SERIAL_PORT0, R_SENSE, DRIVER_ADDRESS);
+    Motor motor0((uint8_t) 0, driver0, DIAG_PIN0, DIR_PIN0, STEP_PIN0);
+
+    motor0.setDir(AntiClockwise);
+    TEST_ASSERT_EQUAL(AntiClockwise, digitalRead(DIR_PIN0));
+}
+
+void test_Motor_Step(void) {
+    TMC2209Stepper driver0(&SERIAL_PORT0, R_SENSE, DRIVER_ADDRESS);
+    Motor motor0((uint8_t) 0, driver0, DIAG_PIN0, DIR_PIN0, STEP_PIN0);
+
+    motor0.setDir(Clockwise);
+    uint32_t target = STEPS_PER_MM * MM_PER_SQUARE;
+    motor0.setTarget(target);
+    motor0.step();
+
+    if (motor0.getPosition() != 1) {
+        TEST_FAIL_MESSAGE("ERROR:  STEP DID NOT INCREMENT POSITIVE");
+    }
+
+    motor0.setDir(AntiClockwise);
+    motor0.step();
+
+    if (motor0.getPosition() != 0) {
+        TEST_FAIL_MESSAGE("ERROR:  STEP DID NOT INCREMENT NEGATIVE");
+    }
+}
+
 void test_Construct_Controller(void) {
     RobotControl subject;
 }
@@ -75,19 +146,6 @@ void test_Step_Motors(void) {
         2 * STEPS_PER_MM * MM_PER_SQUARE,
         2 * STEPS_PER_MM * MM_PER_SQUARE 
     };
-
-    Move right = subject.xyToMotors(2, 0);
-    Move expected();
-
-    Move up = subject.xyToMotors(0, 2);
-    Move left = subject.xyToMotors(-2, 0);
-    Move down = subject.xyToMotors(0, -2);
-    Move up_right = subject.xyToMotors(2, 2);
-    Move up_left = subject.xyToMotors(2, -2);
-    Move down_right = subject.xyToMotors(-2, 2);
-    Move down_left = subject.xyToMotors(-2, -2);
-
-
 }
 
 void setup() {
@@ -95,6 +153,16 @@ void setup() {
     SERIAL_PORT0.begin(115200, SERIAL_8N1, RXD0, TXD0);
     SERIAL_PORT1.begin(115200, SERIAL_8N1, RXD1, TXD1);
     UNITY_BEGIN();
+    RUN_TEST(test_Motor_Initial_Position);
+    RUN_TEST(test_Motor_Initial_Target);
+    RUN_TEST(test_Motor_Init);
+    SERIAL_PORT0.end(); // Shut down serial used during Motor.init()
+
+    RUN_TEST(test_Motor_Set_Target);
+    RUN_TEST(test_Motor_Get_Steps_To_Go);
+    RUN_TEST(test_Motor_Set_Direction);
+    RUN_TEST(test_Motor_Step);
+
     RUN_TEST(test_Construct_Controller);
     RUN_TEST(test_Queue_Move);
     RUN_TEST(test_Dequeue_Move);

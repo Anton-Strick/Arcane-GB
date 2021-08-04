@@ -22,15 +22,14 @@ void setup() {
 void loop() {
     delay(100);
     wireless.idle(); // Handles Server Connection
+    if (wireless.hasJson()) {
+        game.queueJsonMove(wireless.deQueue());
+    }
 
-    if (robot.moveComplete) {
+    else if (robot.moveComplete) {
         if (game.hasMoves()) {
             robot.loadMove(game.getNextMove());
         }
-    }
-
-    if (wireless.hasJson()) {
-        game.queueJsonMove(wireless.deQueue());
     }
 }
 

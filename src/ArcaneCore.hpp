@@ -22,14 +22,9 @@ WirelessController wireless(ssid, password, url);
 
 WebSocketsClient webSocket;
 
-Queue * gameQueue;
-
 hw_timer_t * timer = NULL;
 char in;
 volatile bool complete;
-
-std::array<int8_t, 2> startPos;
-std::array<int8_t, 2> endPos;
 
 void IRAM_ATTR stepperISR();
 void timerInit();
